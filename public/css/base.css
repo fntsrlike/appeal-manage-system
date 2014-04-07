@@ -1,0 +1,90 @@
+.bg-white {
+    background-color: rgba(255,255,255, 0.5);
+}
+
+.bg-white-2 {
+    background-color: rgba(247, 247, 247, 0.99);
+}
+
+.bg-white-3 {
+    background-color: rgba(255,255,255, 0.9);
+}
+
+.bg-blue {
+    background-color: rgba(166, 191, 243, 0.5)
+}
+
+.bg-red {
+    background-color: red;
+}
+
+.bg-appeal-reply {
+    background-color: rgba(124, 209, 192, 0.2);
+}
+
+.bg-null {
+    background-color: rgba(0, 0, 0, 0)
+}
+
+.bottom-sp-5 {
+    margin-bottom: 5px;
+}
+
+.bottom-sp-15 {
+    margin-bottom: 30px;
+}
+
+.bottom-sp-30 {
+    margin-bottom: 30px;
+}
+
+.bottom-sp-null {
+    margin-bottom: 0;
+}
+
+.block {
+    padding: 15px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.wd-100 {
+    width: 100px;
+}
+
+.wd-150 {
+    width: 150px;
+}
+
+.wd-600 {
+    width: 600px;
+}
+
+.wd-800 {
+    width: 800px;
+}
+
+.wd-min-500 {
+    width: 500px;
+}
+
+.div-center {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.bk-lis .td-status {
+    width: 110px;
+}
+
+.tab-content .td-date {
+    width: 90px;
+}
+
+.tab-content .bk-list {
+    width: 800px;
+}
+
+.tab-content .bk-form {
+    width: 600px;
+}

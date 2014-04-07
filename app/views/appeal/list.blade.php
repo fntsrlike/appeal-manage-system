@@ -1,5 +1,5 @@
 <div id="appeal-list" class="row tab-pane fade in active">
-  <div class="div-center wd-800 alert bg-white-2">
+  <div class="div-center bk-list alert bg-white-2">
     <div id="appeal-status" class="text-center">
       <button type="button" class="btn btn-info" value="0">全部</button>
       <button type="button" class="btn btn-danger" value="1">未處理</button>
@@ -9,9 +9,9 @@
     <table id="list_table" class="table">
       <thead>
         <tr>
-          <td class="wd-150 text-center">填表日期</td>
-          <td class="">標題</td>
-          <td class="wd-100 text-center">處理狀況</td>
+          <td class="td-date text-center">填表日期</td>
+          <td class="td-title">標題</td>
+          <td class="td-status wd-100 text-center">處理狀況</td>
         </tr>
       </thead>
       <tbody>
