@@ -12,7 +12,7 @@ class CreateAppealTable extends Migration {
      */
     public function up()
     {
-        Schema::create('appeal_manager', function($table)
+        Schema::create('appeal_managers', function($table)
         {
             $table->increments('m_id');
             $table->integer('u_id')->unsigned()->unique();
@@ -23,7 +23,7 @@ class CreateAppealTable extends Migration {
             $table->softDeletes();
         });
 
-        Schema::create('appeal_complainant', function($table)
+        Schema::create('appeal_complainants', function($table)
         {
             $table->increments('c_id');
             $table->integer('u_id')->unsigned()->unique();
@@ -37,7 +37,7 @@ class CreateAppealTable extends Migration {
             $table->softDeletes();
         });
 
-        Schema::create('appeal_form', function($table)
+        Schema::create('appeal_forms', function($table)
         {
             $table->increments('f_id');
             $table->integer('c_id')->unsigned();
@@ -52,7 +52,7 @@ class CreateAppealTable extends Migration {
             $table->softDeletes();
         });
 
-        Schema::create('appeal_reply', function($table)
+        Schema::create('appeal_replies', function($table)
         {
             $table->increments('r_id');
             $table->integer('f_id')->unsigned();
@@ -63,7 +63,7 @@ class CreateAppealTable extends Migration {
             $table->softDeletes();
         });
 
-        Schema::create('appeal_user', function($table)
+        Schema::create('appeal_users', function($table)
         {
             $table->increments('u_id');
             $table->string('username')->unique();
@@ -82,10 +82,10 @@ class CreateAppealTable extends Migration {
         $prefix = 'bak_';
         $suffix = '_' . date('YmdHis');
 
-        Schema::rename('appeal_complainant', $prefix . 'appeal_complainant' . $suffix);
-        Schema::rename('appeal_form', $prefix . 'appeal_form' . $suffix);
-        Schema::rename('', $prefix . '' . $suffix);
-        Schema::rename('', $prefix . '' . $suffix);
+        Schema::rename('appeal_complainants', $prefix . 'appeal_complainants' . $suffix);
+        Schema::rename('appeal_forms', $prefix . 'appeal_forms' . $suffix);
+        Schema::rename('appeal_replies', $prefix . 'appeal_replies' . $suffix);
+        Schema::rename('appeal_users', $prefix . 'appeal_users' . $suffix);
     }
 
 }
