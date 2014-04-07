@@ -29,7 +29,23 @@ class API_ReplyConroller extends \BaseController {
 	 */
 	public function store()
 	{
-		//
+		$rules      = Config::get('vallidation.reply.store.rules');
+		$messages   = Config::get('vallidation.reply.store.massages');
+		$validator  = Validator::make(Input::all(), $rules, $messages);
+
+		if ($validator->fails()) {
+		    return Response::json();
+		}
+		else {
+		    $reply = new Reply;
+		    $reply->f_id  		= Input::get('form_id');
+		    $reply->r_type  	= Input::get('type');
+		    $reply->r_content  	= Input::get('content');
+		    $reply->u_id  		= Input::get('u_id');
+		    $reply->save();
+
+		    return Response::json();
+		}
 	}
 
 	/**
@@ -62,7 +78,23 @@ class API_ReplyConroller extends \BaseController {
 	 */
 	public function update($id)
 	{
-		//
+		$rules      = Config::get('vallidation.reply.update.rules');
+		$messages   = Config::get('vallidation.reply.update.massages');
+		$validator  = Validator::make(Input::all(), $rules, $messages);
+
+		if ($validator->fails()) {
+		    return Response::json();
+		}
+		else {
+		    $reply = Reply::find($id);
+		    $reply->f_id  		= Input::get('form_id');
+		    $reply->r_type  	= Input::get('type');
+		    $reply->r_content  	= Input::get('content');
+		    $reply->u_id  		= Input::get('u_id');
+		    $reply->save();
+
+		    return Response::json();
+		}
 	}
 
 	/**
@@ -73,7 +105,8 @@ class API_ReplyConroller extends \BaseController {
 	 */
 	public function destroy($id)
 	{
-		//
+		$reply = Reply::find($id);
+		$reply->delete();
 	}
 
 }
