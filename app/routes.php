@@ -12,3 +12,14 @@
 */
 
 Route::get('/', 'AppealController@index');
+
+Route::group(array('before' => 'guest_only'), function()
+{
+    Route::get('login', 'PortalController@login');
+    Route::get('register', 'PortalController@register');
+    Route::post('register', 'PortalController@register_proccess');
+});
+
+Route::get('session', 'PortalController@index');
+Route::get('logout', 'PortalController@logout');
+Route::get('test', 'PortalController@test');

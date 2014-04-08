@@ -78,3 +78,11 @@ Route::filter('csrf', function()
 		throw new Illuminate\Session\TokenMismatchException;
 	}
 });
+
+Route::filter('guest_only', function()
+{
+    if ( Session::has('user.login') )
+    {
+        return Redirect::action('AppealController@index');
+    }
+});
