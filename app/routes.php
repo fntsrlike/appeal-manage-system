@@ -20,6 +20,6 @@ Route::group(array('before' => 'guest_only'), function()
     Route::post('register', 'PortalController@register_proccess');
 });
 
-Route::get('session', 'PortalController@index');
+Route::get('api/user', 'PortalController@status');
 Route::get('logout', 'PortalController@logout');
 Route::get('test', 'PortalController@test');

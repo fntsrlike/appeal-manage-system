@@ -2,8 +2,20 @@
 
 class PortalController extends BaseController {
 
-    public function index(){
-        var_dump(Session::has('user.login'),Session::get('user.username'));
+    public function status() {
+
+        if ( ! Session::has('user.login') ) {
+            return  Response::json( array('status' => false) );
+        }
+
+        $status = array(
+            'status'    => Session::get('user.login'),
+            'username'  => Session::get('user.username'),
+            'u_id'      => Session::get('user.u_id'),
+            'c_id'      => Session::get('user.c_id')
+        );
+
+        return  Response::json($status);
     }
 
     public function login(){
