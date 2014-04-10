@@ -31,23 +31,34 @@ class API_CaseController extends \BaseController {
     {
         // $this->beforeFilter('csrf', array('on' => 'post'));
 
-        $rules      = Config::get('vallidation.case.store.rules');
-        $messages   = Config::get('vallidation.case.store.massages');
+        $rules      = Config::get('validation.case.store.rules');
+        $messages   = Config::get('validation.case.store.messages');
         $validator  = Validator::make(Input::all(), $rules, $messages);
 
         if ($validator->fails()) {
-            return Response::json();
+            $messages = $validator->messages()->all();
+            $response['status'] = 'validation error';
+            $response['msg'] = $messages;
+
+            return Response::json($response);
         }
         else {
+            $privacy = Input::get('privacy_case') . ',' . Input::get('privacy_complainant');
+
             $case = new CaseModel;
-            $case->f_title  = Input::get('title');
-            $case->f_date   = Input::get('date');
-            $case->f_place  = Input::get('place');
-            $case->f_target = Input::get('target');
-            $case->f_content = Input::get('content');
+            $case->c_id     = Session::get('user.c_id');
+            $case->case_title  = Input::get('title');
+            $case->case_date   = Input::get('date');
+            $case->case_place  = Input::get('place');
+            $case->case_target = Input::get('target');
+            $case->case_content = Input::get('content');
+            $case->case_status  = '1';
+            $case->case_privacy = $privacy;
             $case->save();
 
-            return Response::json();
+            $response['status'] = 'success';
+
+            return Response::json($response);
         }
     }
 
@@ -83,23 +94,32 @@ class API_CaseController extends \BaseController {
     {
         // $this->beforeFilter('csrf', array('on' => 'post'));
 
-        $rules      = Config::get('vallidation.case.update.rules');
-        $messages   = Config::get('vallidation.case.update.massages');
+        $rules      = Config::get('validation.case.update.rules');
+        $messages   = Config::get('validation.case.update.messages');
         $validator  = Validator::make(Input::all(), $rules, $messages);
 
         if ($validator->fails()) {
-            return Response::json();
+                        $messages = $validator->messages()->all();
+            $response['status'] = 'validation error';
+            $response['msg'] = $messages;
+
+            return Response::json($response);
         }
         else {
+            $privacy = Input::get('privacy_case') . ',' . Input::get('privacy_complainant');
+
             $case = CaseModel::find($id);
-            $case->f_title  = Input::get('title');
-            $case->f_date   = Input::get('date');
-            $case->f_place  = Input::get('place');
-            $case->f_target = Input::get('target');
-            $case->f_content = Input::get('content');
+            $case->case_title  = Input::get('title');
+            $case->case_date   = Input::get('date');
+            $case->case_place  = Input::get('place');
+            $case->case_target = Input::get('target');
+            $case->case_content = Input::get('content');
+            $case->case_privacy = $privacy;
             $case->save();
 
-            return Response::json();
+            $response['status'] = 'success';
+
+            return Response::json($response);
         }
     }
 

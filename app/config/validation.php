@@ -5,10 +5,12 @@ return array(
         'store' =>array(
             'rules' =>array(
                 'title'     => 'required',
-                'date'      => 'required,date_format:Y/m/d',
+                'date'      => 'required|date_format:Y/m/d',
                 'place'     => 'required',
                 'target'    => 'required',
-                'content'   => 'required'
+                'content'   => 'required',
+                'pravacy_case' => 'in:public,protect,private,secret',
+                'pravacy_complainant' => 'in:public,protect-name,protect-dep,private'
             ),
             'messages' =>array(
                 'title.required'    => '標題為必填欄位',
@@ -16,7 +18,9 @@ return array(
                 'date.date_format'  => '事發日期請以yyyy/mm/dd的格式填寫',
                 'place.required'    => '事發地點為必填欄位',
                 'target.required'   => '申訴對象為必填欄位',
-                'content.required'  => '申訴內容為必填欄位'
+                'content.required'  => '申訴內容為必填欄位',
+                'pravacy_case.in'   => '案件隱私設定的值有誤！',
+                'pravacy_complainant.in' => '申訴者隱私設定的直有誤！'
             )
         ),
 
@@ -26,7 +30,9 @@ return array(
                 'date'      => 'required,date_format:Y/m/d',
                 'place'     => 'required',
                 'target'    => 'required',
-                'content'   => 'required'
+                'content'   => 'required',
+                'pravacy_case' => 'in:public,protect,private,secret',
+                'pravacy_complainant' => 'in:public,protect-name,protect-dep,private'
             ),
             'messages' =>array(
                 'title.required'    => '標題為必填欄位',
@@ -34,7 +40,9 @@ return array(
                 'date.date_format'  => '事發日期請以yyyy/mm/dd的格式填寫',
                 'place.required'    => '事發地點為必填欄位',
                 'target.required'   => '申訴對象為必填欄位',
-                'content.required'  => '申訴內容為必填欄位'
+                'content.required'  => '申訴內容為必填欄位',
+                'pravacy_case.in'   => '案件隱私設定的值有誤！',
+                'pravacy_complainant.in' => '申訴者隱私設定的直有誤！'
             )
         ),
     ),
