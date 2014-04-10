@@ -1,6 +1,6 @@
 <?php
 
-class API_ComplainantConroller extends \BaseController {
+class API_ComplainantController extends \BaseController {
 
 	/**
 	 * Display a listing of the resource.

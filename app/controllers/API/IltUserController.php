@@ -1,6 +1,6 @@
 <?php
 
-class API_ManagerConroller extends \BaseController {
+class API_IltUserController extends \BaseController {
 
     /**
      * Display a listing of the resource.
@@ -29,20 +29,17 @@ class API_ManagerConroller extends \BaseController {
      */
     public function store()
     {
-        $rules      = Config::get('vallidation.manager.store.rules');
-        $messages   = Config::get('vallidation.manager.store.massages');
+        $rules      = Config::get('vallidation.user.store.rules');
+        $messages   = Config::get('vallidation.user.store.massages');
         $validator  = Validator::make(Input::all(), $rules, $messages);
 
         if ($validator->fails()) {
             return Response::json();
         }
         else {
-            $manager = new Manager;
-            $manager->u_id    = Input::get('u_id');
-            $manager->m_name  = Input::get('name');
-            $manager->m_title = Input::get('title');
-            $manager->m_email = Input::get('email');
-            $manager->save();
+            $user = new IltUser;
+            $user->username = Input::get('username');
+            $user->save();
 
             return Response::json();
         }
@@ -78,20 +75,17 @@ class API_ManagerConroller extends \BaseController {
      */
     public function update($id)
     {
-        $rules      = Config::get('vallidation.manager.update.rules');
-        $messages   = Config::get('vallidation.manager.update.massages');
+        $rules      = Config::get('vallidation.user.update.rules');
+        $messages   = Config::get('vallidation.user.update.massages');
         $validator  = Validator::make(Input::all(), $rules, $messages);
 
         if ($validator->fails()) {
             return Response::json();
         }
         else {
-            $manager = Manager::find($id);
-            $manager->u_id    = Input::get('u_id');
-            $manager->m_name  = Input::get('name');
-            $manager->m_title = Input::get('title');
-            $manager->m_email = Input::get('email');
-            $manager->save();
+            $user = IltUser::find($id);
+            $user->username = Input::get('username');
+            $user->save();
 
             return Response::json();
         }
@@ -105,8 +99,8 @@ class API_ManagerConroller extends \BaseController {
      */
     public function destroy($id)
     {
-        $manage = Manager::find($id);
-        $manager->delete();
+        $user = IltUser::find($id);
+        $user->delete();
     }
 
 }

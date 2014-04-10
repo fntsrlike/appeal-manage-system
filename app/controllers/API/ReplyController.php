@@ -1,6 +1,6 @@
 <?php
 
-class API_ReplyConroller extends \BaseController {
+class API_ReplyController extends \BaseController {
 
 	/**
 	 * Display a listing of the resource.

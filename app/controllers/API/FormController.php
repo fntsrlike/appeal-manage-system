@@ -1,6 +1,6 @@
 <?php
 
-class API_FormConroller extends \BaseController {
+class API_FormController extends \BaseController {
 
     /**
      * Display a listing of the resource.
