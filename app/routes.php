@@ -23,3 +23,9 @@ Route::group(array('before' => 'guest_only'), function()
 Route::get('api/user', 'PortalController@status');
 Route::get('logout', 'PortalController@logout');
 Route::get('test', 'PortalController@test');
+
+# API
+Route::group(array('prefix' => 'v1/res/'), function()
+{
+    Route::resource('forms', 'API_CaseController');
+});

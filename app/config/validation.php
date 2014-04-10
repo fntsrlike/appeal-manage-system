@@ -1,7 +1,7 @@
 <?php
 
 return array(
-    'form' => array(
+    'case' => array(
         'store' =>array(
             'rules' =>array(
                 'title'     => 'required',

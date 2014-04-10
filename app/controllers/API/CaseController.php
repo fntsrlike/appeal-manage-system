@@ -1,6 +1,6 @@
 <?php
 
-class API_FormController extends \BaseController {
+class API_CaseController extends \BaseController {
 
     /**
      * Display a listing of the resource.
@@ -31,21 +31,21 @@ class API_FormController extends \BaseController {
     {
         // $this->beforeFilter('csrf', array('on' => 'post'));
 
-        $rules      = Config::get('vallidation.form.store.rules');
-        $messages   = Config::get('vallidation.form.store.massages');
+        $rules      = Config::get('vallidation.case.store.rules');
+        $messages   = Config::get('vallidation.case.store.massages');
         $validator  = Validator::make(Input::all(), $rules, $messages);
 
         if ($validator->fails()) {
             return Response::json();
         }
         else {
-            $form = new Form;
-            $form->f_title  = Input::get('title');
-            $form->f_date   = Input::get('date');
-            $form->f_place  = Input::get('place');
-            $form->f_target = Input::get('target');
-            $form->f_content = Input::get('content');
-            $form->save();
+            $case = new CaseModel;
+            $case->f_title  = Input::get('title');
+            $case->f_date   = Input::get('date');
+            $case->f_place  = Input::get('place');
+            $case->f_target = Input::get('target');
+            $case->f_content = Input::get('content');
+            $case->save();
 
             return Response::json();
         }
@@ -83,21 +83,21 @@ class API_FormController extends \BaseController {
     {
         // $this->beforeFilter('csrf', array('on' => 'post'));
 
-        $rules      = Config::get('vallidation.form.update.rules');
-        $messages   = Config::get('vallidation.form.update.massages');
+        $rules      = Config::get('vallidation.case.update.rules');
+        $messages   = Config::get('vallidation.case.update.massages');
         $validator  = Validator::make(Input::all(), $rules, $messages);
 
         if ($validator->fails()) {
             return Response::json();
         }
         else {
-            $form = Form::find($id);
-            $form->f_title  = Input::get('title');
-            $form->f_date   = Input::get('date');
-            $form->f_place  = Input::get('place');
-            $form->f_target = Input::get('target');
-            $form->f_content = Input::get('content');
-            $form->save();
+            $case = CaseModel::find($id);
+            $case->f_title  = Input::get('title');
+            $case->f_date   = Input::get('date');
+            $case->f_place  = Input::get('place');
+            $case->f_target = Input::get('target');
+            $case->f_content = Input::get('content');
+            $case->save();
 
             return Response::json();
         }
@@ -111,8 +111,8 @@ class API_FormController extends \BaseController {
      */
     public function destroy($id)
     {
-        $form = Form::find($id);
-        $form->delete();
+        $case = CaseModel::find($id);
+        $case->delete();
     }
 
 }

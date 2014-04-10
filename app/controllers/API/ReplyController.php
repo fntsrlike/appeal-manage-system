@@ -38,7 +38,7 @@ class API_ReplyController extends \BaseController {
 		}
 		else {
 		    $reply = new Reply;
-		    $reply->f_id  		= Input::get('form_id');
+		    $reply->case_id  		= Input::get('case_id');
 		    $reply->r_type  	= Input::get('type');
 		    $reply->r_content  	= Input::get('content');
 		    $reply->u_id  		= Input::get('u_id');
@@ -87,7 +87,7 @@ class API_ReplyController extends \BaseController {
 		}
 		else {
 		    $reply = Reply::find($id);
-		    $reply->f_id  		= Input::get('form_id');
+		    $reply->case_id  		= Input::get('case_id');
 		    $reply->r_type  	= Input::get('type');
 		    $reply->r_content  	= Input::get('content');
 		    $reply->u_id  		= Input::get('u_id');
