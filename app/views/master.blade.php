@@ -46,31 +46,12 @@
     <script src="{{asset('js/get_view.js')}}"></script>
     <script src="{{asset('js/get_list.js')}}"></script>
     <script src="{{asset('js/get_reply.js')}}"></script>
-    <script src="{{asset('js/form.js')}}"></script>
     <script src="{{asset('js/post_test.js')}}"></script>
     --}}
-    <script src="http://more.handlino.com/javascripts/moretext-1.2.js"></script>
     <script src="http://res.nchusg.org/nav/load.js"></script>
-    <script type="text/javascript">
-      appeal.tab_hash = function() {
-        var hash = window.location.hash;
-        hash && $( 'ul.nav a[href="' + hash + '"]' ).tab( 'show' );
-
-        $( '.nav a' ).click( function( e ) {
-          var
-          scrollmem = $('body').scrollTop();
-
-          $( this ).tab( 'show' );
-          window.location.hash = this.hash;
-          $( 'html, body' ).scrollTop( scrollmem );
-        });
-      }();
-
-      window.onhashchange = function() {
-        var hash = window.location.hash;
-        hash && $( 'ul.nav a[href="' + hash + '"]' ).tab( 'show' );
-      };
-    </script>
+    <script src="{{asset('js/form.js')}}"></script>
+    <script src="{{asset('js/hash_tab.js')}}"></script>
+    <script src="http://more.handlino.com/javascripts/moretext-1.2.js"></script>
 
 @show
   </body>

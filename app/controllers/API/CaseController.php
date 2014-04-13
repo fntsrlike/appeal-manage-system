@@ -57,6 +57,7 @@ class API_CaseController extends \BaseController {
             $case->save();
 
             $response['status'] = 'success';
+            $response['case_id'] = $case->case_id;
 
             return Response::json($response);
         }

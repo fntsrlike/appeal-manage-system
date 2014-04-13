@@ -48,25 +48,25 @@
             <h5>案件資料</h5>
             <div class="radio">
               <label>
-                <input type="radio" name="pravacy_case" value="public" checked>
+                <input type="radio" name="privacy_case" value="public" checked>
                 公開案件內容、結案報告與留言
               </label>
             </div>
             <div class="radio">
               <label>
-                <input type="radio" name="pravacy_case" value="protect">
+                <input type="radio" name="privacy_case" value="protect">
                 僅公開案件內容與結案報告
               </label>
             </div>
             <div class="radio">
               <label>
-                <input type="radio" name="pravacy_case" value="private">
+                <input type="radio" name="privacy_case" value="private">
                 僅在清單上顯示案件日期、標題與處理狀態
               </label>
             </div>
             <div class="radio">
               <label>
-                <input type="radio" name="pravacy_case" value="secret">
+                <input type="radio" name="privacy_case" value="secret">
                 全部隱藏
               </label>
             </div>
@@ -75,25 +75,25 @@
             <h5>申訴者資訊</h5>
             <div class="radio">
               <label>
-                <input type="radio" name="pravacy_complainant" value="public" checked>
+                <input type="radio" name="privacy_complainant" value="public" checked>
                 公開名稱與系級
               </label>
             </div>
             <div class="radio">
               <label>
-                <input type="radio" name="pravacy_complainant" value="protect-dep">
+                <input type="radio" name="privacy_complainant" value="protect-dep">
                 隱藏系級，僅公開名稱
               </label>
             </div>
             <div class="radio">
               <label>
-                <input type="radio" name="pravacy_complainant" value="protect-name">
+                <input type="radio" name="privacy_complainant" value="protect-name">
                 隱藏名稱，僅公開系級
               </label>
             </div>
             <div class="radio">
               <label>
-                <input type="radio" name="pravacy_complainant" value="private">
+                <input type="radio" name="privacy_complainant" value="private">
                 全部隱藏
               </label>
             </div>
@@ -101,8 +101,12 @@
         </div>
       </div>
 
-      <div class="form-group text-center">
-        <button type="submit" class="btn btn-default">送出</button>
+      <div class="form-group">
+        <p id="form_error_msg">
+        </p>
+        <p class="text-center">
+          <button type="submit" class="btn btn-default">送出</button>
+        </p>
       </div>
 
     </form>
