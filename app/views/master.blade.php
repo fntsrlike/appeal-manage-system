@@ -35,24 +35,12 @@
     </div>
 
 @section('footer_scripts')
-    <script type="text/javascript">
-      appeal = {};
-      appeal.config = {};
-      appeal.config.base_url = "{{'http://localhost/fntsr/nchusg/app/app_appeal_laravel/public/'}}";
-    </script>
     <script src="http://cdn.bootcss.com/jquery/1.10.2/jquery.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
-    {{--
-    <script src="{{asset('js/get_view.js')}}"></script>
-    <script src="{{asset('js/get_list.js')}}"></script>
-    <script src="{{asset('js/get_reply.js')}}"></script>
-    <script src="{{asset('js/post_test.js')}}"></script>
-    --}}
     <script src="http://res.nchusg.org/nav/load.js"></script>
-    <script src="{{asset('js/form.js')}}"></script>
+    <script src="{{asset('js/appeal_case.js')}}"></script>
     <script src="{{asset('js/hash_tab.js')}}"></script>
     <script src="http://more.handlino.com/javascripts/moretext-1.2.js"></script>
-
 @show
   </body>
 </html>

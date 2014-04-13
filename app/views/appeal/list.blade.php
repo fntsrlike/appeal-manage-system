@@ -1,4 +1,5 @@
 <div id="appeal-list" class="row tab-pane fade in active">
+  <form id="show_list" action={{action('API_CaseController@index')}}></form>
   <div class="div-center bk-list alert bg-white-2">
     <div id="appeal-status" class="text-center">
       <button type="button" class="btn btn-info" value="0">全部</button>
@@ -15,6 +16,7 @@
         </tr>
       </thead>
       <tbody>
+      {{--
         <tr>
           <td>2014-01-02</td>
           <td>碩士專班報名網站太夯了，進不去，無法報名啊！</td>
@@ -39,6 +41,7 @@
             <span class="label label-success">12</span>
           </td>
         </tr>
+      --}}
       </tbody>
     </table>
   </div>
