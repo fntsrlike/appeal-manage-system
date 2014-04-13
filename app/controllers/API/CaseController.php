@@ -107,7 +107,58 @@ class API_CaseController extends \BaseController {
      */
     public function show($id)
     {
-        //
+        $case        = CaseModel::find($id);
+        $complainant = Complainant::find($case->c_id);
+
+        $privacy  = explode(',', $case->case_privacy);
+        $case_privacy        = $privacy[0];
+        $complainant_privacy = $privacy[1];
+
+        $response = array();
+
+        $response['title']  = $case->case_title;
+        $response['target'] = $case->case_target;
+        $response['place']  = $case->case_place;
+        $response['date']   = $case->case_date;
+        $response['status'] = $case->case_status;
+        $response['content']= $case->case_content;
+        $response['report'] = $case->case_report;
+
+        $response['name']   = $complainant->c_name;
+        $response['depart'] = $complainant->c_department;
+        $response['grade']  = $complainant->c_grade;
+        $response['phone']  = $complainant->c_phone;
+        $response['email']  = $complainant->c_email;
+
+        if ( Session::has('user.login') and Session::get('user.c_id') == $case->c_id ) {
+            return Response::json($response);
+        }
+        else {
+            $response['phone']  = '<個資>';
+            $response['email']  = '<個資>';
+        }
+
+        if ( $case_privacy == 'private' or $case_privacy == 'secret' ) {
+            $response['target'] = '<隱藏>';
+            $response['place']  = '<隱藏>';
+            $response['date']   = '<隱藏>';
+            $response['content']= '<隱藏>';
+            $response['report'] = '<隱藏>';
+        }
+
+        if ( $case_privacy == 'secret' ) {
+            $response['title']  = '<隱藏>';
+        }
+
+        if ( $complainant_privacy == 'protect_dep' or $complainant_privacy == 'private' ) {
+            $response['depart'] = '<隱藏>';
+        }
+
+        if ( $complainant_privacy == 'protect_name' or $complainant_privacy == 'private' ) {
+            $response['name'] = '<隱藏>';
+        }
+
+        return Response::json($response);
     }
 
     /**
