@@ -1,5 +1,4 @@
 <div id="appeal-view" class="row tab-pane fade in " >
-
   <div class="panel panel-default wd-800 div-center">
     <div class="panel-heading">
       <h3 id="appeal-view-title" class="text-center">...</h3>

@@ -69,8 +69,44 @@ $( function() {
 
   };
 
-  ns_appeal.read = function() {
+  ns_appeal.show = function( case_id ) {
+    var
+    url  = $( '#show_list' ).attr( 'action' ) + '/' + case_id,
+    grade = { '1' : '一年級', '2' : '二年級', '3' : '三年級', '4' : '四年級', '5' : '四年級Up' };
 
+    $.get(url, function(data){
+      console.log(data);
+
+      if ( data.length === 0 ) {
+        console.log('case unexist');
+        return;
+      }
+
+      for ( var key in data) {
+        if ( data[key] == '#private' ) {
+          if ( key == 'title' ) {
+            data[key] = '<span class="text-center text-muted">本案件標題已經被設定為隱藏</span>';
+          } else if ( key == 'content' || key == 'report' ) {
+            data[key] = '<p class="text-center text-info">本案件內容已經被設定為隱藏</p>';
+          } else {
+            data[key] = '<span class="text-muted">#private</span>';
+          }
+        }
+      }
+
+      $( '#appeal-view-title'  ).html( data.title );
+      $( '#appeal-view-target' ).html( data.target );
+      $( '#appeal-view-place'  ).html( data.place );
+      $( '#appeal-view-date'   ).html( data.date );
+      $( '#appeal-view-status' ).html( data.status );
+      $( '#appeal-view-content'  ).html( data.content );
+      $( '#appeal-view-pName'    ).html( data.name );
+      $( '#appeal-view-pDepart'  ).html( data.depart + '（' + grade[data.grade] + '）' );
+      $( '#appeal-view-pPhone' ).html( data.phone );
+      $( '#appeal-view-pEmail' ).html( data.email );
+      $( '#appeal-view-report' ).html( data.report );
+
+    });
   };
 
   ns_appeal.show_list = function( status ) {

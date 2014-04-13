@@ -108,7 +108,13 @@ class API_CaseController extends \BaseController {
     public function show($id)
     {
         $case        = CaseModel::find($id);
+
+        if ( null == $case ) {
+            return Response::json(array());
+        }
+
         $complainant = Complainant::find($case->c_id);
+        $user = IltUser::find($complainant->u_id);
 
         $privacy  = explode(',', $case->case_privacy);
         $case_privacy        = $privacy[0];
@@ -124,7 +130,7 @@ class API_CaseController extends \BaseController {
         $response['content']= $case->case_content;
         $response['report'] = $case->case_report;
 
-        $response['name']   = $complainant->c_name;
+        $response['name']   = $user->username;
         $response['depart'] = $complainant->c_department;
         $response['grade']  = $complainant->c_grade;
         $response['phone']  = $complainant->c_phone;
@@ -134,28 +140,28 @@ class API_CaseController extends \BaseController {
             return Response::json($response);
         }
         else {
-            $response['phone']  = '<個資>';
-            $response['email']  = '<個資>';
+            $response['phone']  = '#private';
+            $response['email']  = '#private';
         }
 
         if ( $case_privacy == 'private' or $case_privacy == 'secret' ) {
-            $response['target'] = '<隱藏>';
-            $response['place']  = '<隱藏>';
-            $response['date']   = '<隱藏>';
-            $response['content']= '<隱藏>';
-            $response['report'] = '<隱藏>';
+            $response['target'] = '#private';
+            $response['place']  = '#private';
+            $response['date']   = '#private';
+            $response['content']= '#private';
+            $response['report'] = '#private';
         }
 
         if ( $case_privacy == 'secret' ) {
-            $response['title']  = '<隱藏>';
+            $response['title']  = '#private';
         }
 
         if ( $complainant_privacy == 'protect_dep' or $complainant_privacy == 'private' ) {
-            $response['depart'] = '<隱藏>';
+            $response['depart'] = '#private';
         }
 
         if ( $complainant_privacy == 'protect_name' or $complainant_privacy == 'private' ) {
-            $response['name'] = '<隱藏>';
+            $response['name'] = '#private';
         }
 
         return Response::json($response);

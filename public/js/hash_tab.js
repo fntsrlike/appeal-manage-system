@@ -18,11 +18,17 @@ $(function() {
   };
 
   ns_hash.tab_show = function( hash ) {
-    if ( hash.search( '#appeal-view-' ) == -1 ) {
+    if ( hash.search( '#appeal-view' ) == -1 ) {
       $( 'ul.nav a[href="' + hash + '"]' ).tab( 'show' );
+
+    } else if ( hash.search( '#appeal-view-' ) == -1 ) {
+      if ( ns_hash.case_id !== 0 ) {
+        window.location.hash = window.location.hash + '-' + ns_hash.case_id;
+      }
     } else {
       $( 'ul.nav a[href="#appeal-view"]' ).tab( 'show' );
-      ns_hash.case_id = hash.substring(13);
+      ns_hash.case_id = hash.substring( 13 );
+      ns_appeal.show( ns_hash.case_id )
     }
   };
 
