@@ -20,6 +20,11 @@ $( function() {
       ns_appeal.show_list( status );
     });
 
+    $( '#reply_form' ).submit( function( event ) {
+      event.preventDefault();
+      ns_appeal.store_reply( $( this ) );
+    });
+
     ns_appeal.show_list(0);
     ns_user.update();
 
@@ -117,7 +122,6 @@ $( function() {
     grade = { '1' : '一年級', '2' : '二年級', '3' : '三年級', '4' : '四年級', '5' : '四年級Up' };
 
     $.get(url, function(data){
-      console.log(data);
 
       if ( data.length === 0 ) {
         console.log('case unexist');
@@ -147,6 +151,18 @@ $( function() {
       $( '#appeal-view-pPhone' ).html( data.phone );
       $( '#appeal-view-pEmail' ).html( data.email );
       $( '#appeal-view-report' ).html( data.report );
+      $( '#appeal-view-id' ).attr( 'value', case_id );
+
+      ns_appeal.show_replies( case_id );
+
+      if ( ns_user.name != data.name ) {
+        $( '#reply_form textarea' ).attr('disabled', 'disabled');
+        $( '#reply_form button' ).attr('disabled', 'disabled');
+      }
+      else {
+        $( '#reply_form textarea' ).removeAttr('disabled');
+        $( '#reply_form button' ).removeAttr('disabled');
+      }
 
     });
   };
@@ -187,7 +203,7 @@ $( function() {
       tmp = '<tr>';
       tmp += '<td class="text-center">' + case_list[key].created_at.date. substring(0,10) + '</td>';
       tmp += '<td>' + href + '</td>';
-      tmp += ns_appeal.make_list_status(case_list[key].status, 0);
+      tmp += ns_appeal.make_list_status(case_list[key].status, case_list[key].replies_count);
       tmp += '</tr>';
 
       trs += tmp;
@@ -218,6 +234,107 @@ $( function() {
     }
 
     return msg;
+  };
+
+  ns_appeal.store_reply = function( form ) {
+    var
+    url = form.attr( "action" ),
+    input = {
+      "content"   : form.find( "textarea[name='content']" ).val(),
+      "case_id"  : form.find( "input[name='case_id']" ).val(),
+    };
+
+    $.ajax({
+      type: 'POST',
+      url: url,
+      data: input,
+      success: function( data ) {
+        var msg, msgs, hash;
+
+        if ( data.status == '402 OK' ) {
+          alert( '您的留言已經成功送出！' );
+          $( '#reply_form' ).each( function() {
+            this.reset();
+          });
+
+          ns_appeal.show_replies( input.case_id );
+        }
+        else if ( data.status == '400 Bad Request' ) {
+          msgs = '<ul>';
+          for ( var key in data.msg ) {
+            msgs += '<li><span class="text-danger">' + data.msg[key] + '</span></li>';
+          }
+          msgs += '</ul>';
+
+          $( '#reply_form_error_msg' ).html( msgs );
+        }
+        else {
+          alert( '您無權在本案件留言！' );
+        }
+      },
+      dataType: 'json'
+    })
+    .fail(function() {
+      alert( '連線失敗，請檢查網路狀況，或是聯絡管理員！' );
+    });
+  };
+
+  ns_appeal.show_replies = function( case_id ) {
+    var
+    url  = $( '#replies_list' ).attr( 'action' ) + '?case_id=' + case_id;
+
+    $.get(url, function(data){
+
+      if ( ( data.length === 0 ) || ( data.status == '400 Bad Request' ) ) {
+        $('#appeal-view-dialog').html('<p class="text-danger text-center">對話讀取錯誤</p>');
+        return
+      }
+
+      if ( data.status == '401 Unauthorized' ) {
+        $('#appeal-view-dialog').html('<p class="text-info text-center">本申訴案留言已經設成隱藏。</p>');
+        return
+      }
+
+      if ( data.replies_count <= 0 ) {
+        $('#appeal-view-dialog').html('<p class="text-info text-center">目前沒有對話</p>');
+        return
+      };
+
+      ns_appeal.make_replies( data.replies );
+
+    });
+  };
+
+  ns_appeal.make_replies = function( replies ) {
+    var
+    reply,
+    location,
+    name,
+    date,
+    content,
+    block,
+    blocks = '';
+
+    for ( var key in replies ) {
+      reply = replies[key];
+
+      location  = ( reply.type == 'complainant' ) ? "pull-left" : "pull-right";
+      name      = ( reply.type == 'complainant' ) ? reply.complainant.name : reply.manager.title + reply.manager.name;
+      date      = reply.datetime.date;
+      content   = reply.content;
+      block     = '';
+
+      block += '<div class="row bottom-sp-15">';
+      block += '<div class="block bg-white wd-min-500 ' + location + '">';
+      block += '<h4>' + name + ' <small>' + date + '</small></h4>';
+      block += content;
+      block += '</div></div>';
+
+      blocks += block;
+    }
+
+
+    $('#appeal-view-dialog').html(blocks);
   };
 
   ns_appeal.run();

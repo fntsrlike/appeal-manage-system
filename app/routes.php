@@ -29,4 +29,5 @@ Route::group(array('prefix' => 'v1/res/'), function()
 {
     Route::get('user', 'PortalController@status');
     Route::resource('forms', 'API_CaseController');
+    Route::resource('replies', 'API_ReplyController');
 });

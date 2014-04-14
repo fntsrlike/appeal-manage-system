@@ -14,31 +14,32 @@ class API_CaseController extends \BaseController {
         $case_list = array();
 
         foreach ($cases as $case) {
+
+            $replies = Reply::where('case_id', '=', $case->case_id)->get();
+
             $privacy = explode(',', $case->case_privacy);
             $case_privacy = $privacy[0];
-            $case_files = array();
 
+            $case_files = array();
             $case_files['id'] = $case->case_id;
+            $case_files['date'] = $case->case_date;
+            $case_files['title'] = $case->case_title;
             $case_files['status'] = $case->case_status;
             $case_files['privacy'] = $case_privacy;
             $case_files['is_owner'] = false;
+            $case_files['replies_count'] = $replies->count();
             $case_files['created_at'] = $case->created_at;
+
 
             if ( Session::has('user.login') and Session::get('user.c_id') == $case->c_id ) {
                 $case_privacy = 'public';
                 $case_files['is_owner'] = true;
             }
 
-            switch ($case_privacy) {
-                case 'secret':
-                    $case_files['date'] = '????-??-??';
-                    $case_files['title'] = '<本案件標題已經被設為隱藏>';
-                    break;
-
-                default:
-                    $case_files['date'] = $case->case_date;
-                    $case_files['title'] = $case->case_title;
-                    break;
+            if( $case_privacy == 'secret') {
+                $case_files['date'] = '????-??-??';
+                $case_files['title'] = '<本案件標題已經被設為隱藏>';
+                $case_files['replies_count'] = '?';
             }
 
             $case_list[] = $case_files;
@@ -107,7 +108,7 @@ class API_CaseController extends \BaseController {
      */
     public function show($id)
     {
-        $case        = CaseModel::find($id);
+        $case = CaseModel::find($id);
 
         if ( null == $case ) {
             return Response::json(array());
