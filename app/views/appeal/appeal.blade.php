@@ -5,4 +5,5 @@
   @include('appeal.form')
   @include('appeal.track')
   @include('appeal.view')
+  @include('appeal.action')
 @stop

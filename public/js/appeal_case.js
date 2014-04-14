@@ -1,6 +1,12 @@
 $( function() {
 
   ns_appeal = {};
+  ns_user   = {};
+
+  ns_user.status = false;
+  ns_user.name = '';
+  ns_user.u_id = 0;
+  ns_user.c_id = 0;
 
   ns_appeal.run = function() {
     $( '#appeal_form' ).submit( function( event ) {
@@ -15,6 +21,42 @@ $( function() {
     });
 
     ns_appeal.show_list(0);
+    ns_user.update();
+
+  };
+
+  ns_user.update = function( ) {
+    var url  = $( '#api_user' ).attr( 'action' );
+
+    $.get( url, function( data ){
+      if ( data.status === true ) {
+        ns_user.status = data.status;
+        ns_user.name = data.username;
+        ns_user.u_id = data.u_id;
+        ns_user.c_id = data.c_id;
+      }
+      else {
+        ns_user.status = false;
+        ns_user.name = '';
+        ns_user.u_id = 0;
+        ns_user.c_id = 0;
+      }
+    })
+    .done( function() {
+      ns_user.update_view( ns_user.status );
+    });
+
+  };
+
+  ns_user.update_view = function( status ) {
+    if ( status === true ) {
+      $( '.login_show' ).removeClass('hidden');
+      $( '.login_hidden' ).addClass('hidden');
+    }
+    else {
+      $( '.login_show' ).addClass('hidden');
+      $( '.login_hidden' ).removeClass('hidden');
+    }
   };
 
   ns_appeal.store = function( form ) {
@@ -114,10 +156,14 @@ $( function() {
     case_list = [],
     url  = $( '#show_list' ).attr( 'action' );
 
-    $.get(url, function(data){
+    $.get( url, function( data ){
       if ( status != '0' ) {
         for ( var key in data ) {
-          if ( data[key].status == status ) {
+          if ( ( status == '4' ) ) {
+            if ( data[key].is_owner === true ) {
+              case_list.push( data[key] );
+            }
+          } else if ( data[key].status == status ) {
             case_list.push( data[key] );
           }
         }
