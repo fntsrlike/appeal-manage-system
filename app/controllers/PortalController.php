@@ -13,7 +13,8 @@ class PortalController extends BaseController {
             'username'  => Session::get('user.username'),
             'u_id'      => Session::get('user.u_id'),
             'c_id'      => Session::get('user.c_id'),
-            'm_id'      => Session::get('user.m_id')
+            'm_id'      => Session::get('user.m_id'),
+            'is_sa'     => Session::get('user.is_sa'),
         );
 
         return Response::json($status);
@@ -50,12 +51,14 @@ class PortalController extends BaseController {
         $u_id = $ilt_user->u_id;
         $c_id = $complainant->c_id;
         $m_id = ( $manager == null ) ? 0 : $manager->m_id;
+        $is_sa = in_array($username, Config::get('appeal.admin'));
 
         Session::put('user.login', true);
         Session::put('user.username', $username);
         Session::put('user.u_id', $u_id);
         Session::put('user.c_id', $c_id);
         Session::put('user.m_id', $m_id);
+        Session::put('user.is_sa', $is_sa);
 
         return Redirect::action('AppealController@index');
     }
