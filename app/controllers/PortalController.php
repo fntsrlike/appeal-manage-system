@@ -5,17 +5,18 @@ class PortalController extends BaseController {
     public function status() {
 
         if ( ! Session::has('user.login') ) {
-            return  Response::json( array('status' => false) );
+            return Response::json( array('status' => false) );
         }
 
         $status = array(
             'status'    => Session::get('user.login'),
             'username'  => Session::get('user.username'),
             'u_id'      => Session::get('user.u_id'),
-            'c_id'      => Session::get('user.c_id')
+            'c_id'      => Session::get('user.c_id'),
+            'm_id'      => Session::get('user.m_id')
         );
 
-        return  Response::json($status);
+        return Response::json($status);
     }
 
     public function login(){
@@ -43,13 +44,18 @@ class PortalController extends BaseController {
             return Redirect::action('PortalController@register');
         }
 
+        $complainant = Complainant::where('u_id', '=', $ilt_user->u_id)->first();
+        $manager = manager::where('u_id', '=', $ilt_user->u_id)->first();
+
         $u_id = $ilt_user->u_id;
-        $c_id = Complainant::where('u_id', '=', $ilt_user->u_id)->first()->c_id;
+        $c_id = $complainant->c_id;
+        $m_id = ( $manager == null ) ? 0 : $manager->m_id;
 
         Session::put('user.login', true);
         Session::put('user.username', $username);
         Session::put('user.u_id', $u_id);
         Session::put('user.c_id', $c_id);
+        Session::put('user.m_id', $m_id);
 
         return Redirect::action('AppealController@index');
     }
@@ -126,6 +132,7 @@ class PortalController extends BaseController {
 
     public function logout() {
         Session::forget('user');
+        return Redirect::action('AppealController@index');
     }
 
 }
