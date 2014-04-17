@@ -18,6 +18,10 @@
     background-color: red;
 }
 
+.bg-red-2 {
+    background-color: rgba(255, 223, 223, 0.5);
+}
+
 .bg-appeal-reply {
     background-color: rgba(124, 209, 192, 0.2);
 }
@@ -86,5 +90,9 @@
 }
 
 .tab-content .bk-form {
+    width: 600px;
+}
+
+.tab-content .bk-track {
     width: 600px;
 }
