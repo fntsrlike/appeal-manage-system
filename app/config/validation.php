@@ -12,7 +12,7 @@ return array(
                 'privacy_case' => 'required|in:public,protect,private,secret',
                 'privacy_complainant' => 'required|in:public,protect-name,protect-dep,private'
             ),
-            'messages' =>array(
+            'messages' => array(
                 'title.required'    => '標題為必填欄位',
                 'date.required'     => '事發日期為必填欄位',
                 'date.date_format'  => '事發日期請以yyyy-mm-dd的格式填寫',
@@ -78,6 +78,59 @@ return array(
             )
         )
     ),
-
+    'manager' => array(
+        'store' => array(
+            'rules' => array(
+                'username'  => 'required',
+                'title'     => 'required',
+            ),
+            'messages' => array(
+                'username.required' => '使用者名稱（ID）為必填欄位',
+                'title.required'    => '頭銜為必填欄位',
+            )
+        ),
+        'update' => array(
+            'type' => array(
+                'rules' => array(
+                    'type'  => 'required|in:title,status',
+                ),
+                'messages' => array(
+                    'type.required' => '您沒有指定要更新的類型',
+                    'type.in'       => '您指定要更新的類型不存在',
+                )
+            ),
+            'title' => array(
+                'rules' => array(
+                    'title'  => 'required',
+                ),
+                'messages' => array(
+                    'title.required' => '頭銜為必填欄位',
+                )
+            ),
+            'status' => array(
+                'rules' => array(
+                    'username'  => 'required',
+                    'reason'    => 'required',
+                    'status'    => 'required|in:stop,recover'
+                ),
+                'messages' => array(
+                    'username.required' => '使用者名稱（ID）為必填欄位',
+                    'reason.required'   => '理由為必填欄位',
+                    'status.required'   => '狀態類型為必填欄位'
+                    'status.in'         => '您指定的狀態類型不存在'
+                )
+            ),
+        ),
+        'delete' => array(
+            'rules' => array(
+                'username'  => 'required',
+                'name'      => 'required',
+            ),
+            'messages' => array(
+                'username.required' => '使用者名稱（ID）為必填欄位',
+                'name.required'     => '管理員名稱為必填欄位',
+            )
+        ),
+    ),
 
 );
