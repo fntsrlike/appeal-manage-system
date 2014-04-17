@@ -12,7 +12,7 @@ class API_ReplyController extends \BaseController {
         $case = CaseModel::find(Input::get('case_id'));
 
         if ( $case == null ) {
-            $response['status'] = '400 Bad Request';
+            $response['status'] = '440 Bad Request';
             return Response::json($response);
         }
 

@@ -11,6 +11,7 @@
 |
 */
 
+
 Route::get('/', 'AppealController@index');
 
 Route::group(array('before' => 'guest_only'), function()
@@ -27,7 +28,12 @@ Route::get('test', 'PortalController@test');
 # API
 Route::group(array('prefix' => 'v1/res/'), function()
 {
+    $API_only = array('only' => array('index', 'store', 'update', 'show', 'destory'));
+
     Route::get('user', 'PortalController@status');
-    Route::resource('forms', 'API_CaseController');
-    Route::resource('replies', 'API_ReplyController');
+    Route::resource('cases', 'API_CaseController', $API_only);
+    Route::resource('replies', 'API_ReplyController', $API_only);
+    Route::resource('managers', 'API_ManagerController', $API_only);
+    Route::resource('action', 'API_ActionController', array('only' => array('index')));
 });
+

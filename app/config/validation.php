@@ -81,25 +81,26 @@ return array(
     'manager' => array(
         'store' => array(
             'rules' => array(
-                'username'  => 'required',
-                'title'     => 'required',
+                'username'  => 'required|exists:appeal_ilt_users,username',
+                'title'     => 'required'
             ),
             'messages' => array(
                 'username.required' => '使用者名稱（ID）為必填欄位',
-                'title.required'    => '頭銜為必填欄位',
+                'username.exists'   => '您所輸入的使用者並不存在',
+                'title.required'    => '頭銜為必填欄位'
             )
         ),
         'update' => array(
             'type' => array(
                 'rules' => array(
-                    'type'  => 'required|in:title,status',
+                    'type'  => 'required|in:files,status',
                 ),
                 'messages' => array(
                     'type.required' => '您沒有指定要更新的類型',
-                    'type.in'       => '您指定要更新的類型不存在',
+                    'type.in'       => '您指定要更新的類型不存在'
                 )
             ),
-            'title' => array(
+            'files' => array(
                 'rules' => array(
                     'title'  => 'required',
                 ),
@@ -109,12 +110,10 @@ return array(
             ),
             'status' => array(
                 'rules' => array(
-                    'username'  => 'required',
                     'reason'    => 'required',
                     'status'    => 'required|in:stop,recover'
                 ),
                 'messages' => array(
-                    'username.required' => '使用者名稱（ID）為必填欄位',
                     'reason.required'   => '理由為必填欄位',
                     'status.required'   => '狀態類型為必填欄位'
                     'status.in'         => '您指定的狀態類型不存在'
@@ -124,11 +123,11 @@ return array(
         'delete' => array(
             'rules' => array(
                 'username'  => 'required',
-                'name'      => 'required',
+                'name'      => 'required'
             ),
             'messages' => array(
                 'username.required' => '使用者名稱（ID）為必填欄位',
-                'name.required'     => '管理員名稱為必填欄位',
+                'name.required'     => '管理員名稱為必填欄位'
             )
         ),
     ),
