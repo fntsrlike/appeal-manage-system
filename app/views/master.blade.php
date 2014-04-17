@@ -17,7 +17,7 @@
           <li class="active"><a href="#appeal-list" data-toggle="pill">申訴清單</a></li>
           <li><a href="#appeal-view" data-toggle="pill">內文檢視</a></li>
           <li><a href="#appeal-form" data-toggle="pill">我要申訴</a></li>
-          <li class="login_show"><a href="#appeal-manager" data-toggle="pill">學權團隊</a></li>
+          <li><a href="#appeal-manager" data-toggle="pill">學權團隊</a></li>
           <li class="login_hidden"><a href="{{action('PortalController@login')}}">使用者登入</a></li>
           <li class="login_show"><a href="{{action('PortalController@logout')}}">登出</a></li>
         </ul>

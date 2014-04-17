@@ -10,6 +10,7 @@ class API_ActionController extends \BaseController {
     public function index()
     {
         $is_sa = ( Session::has('user.login') and (Session::get('user.is_sa') == true) );
+        $is_manager = ( Session::has('user.login') and (Session::get('user.m_id') > 0) );
 
         $allow_action   = array('RECOVERY_MANAGER_PERM','STOP_MANAGER_PERM');
         $sa_only_action = array();
@@ -45,7 +46,7 @@ class API_ActionController extends \BaseController {
             $a['reason']    = $action->event;
             $a['datetime']  = $action->created_at;
 
-            if ($is_sa) {
+            if ($is_sa || $is_manager) {
                 $user = IltUser::find($action->operator_u_id);
                 $a['operator'] = $user->username;
             }

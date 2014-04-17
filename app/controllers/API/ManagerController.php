@@ -22,10 +22,10 @@ class API_ManagerController extends \BaseController {
             $m['status']    = $manager->m_status;
 
             if ( Session::has('user.login') and (Session::get('user.is_sa') == true) ) {
-                $m['id']     = $manager->m_id;
+                $m['m_id']     = $manager->m_id;
             }
 
-            $list = $m;
+            $list[] = $m;
         }
 
         $response['managers'] = $list;

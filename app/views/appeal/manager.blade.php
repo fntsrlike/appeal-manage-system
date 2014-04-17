@@ -1,142 +1,53 @@
 <div id="appeal-manager" class="row tab-pane fade">
   <div class="div-center alert bg-white-2 bk-track">
     <h4>現職管理者清單</h4>
-    <table class="table">
+    <table id="being_manager_list" class="table">
       <thead>
         <tr>
-          <td>ID</td>
-          <td>名稱</td>
-          <td>頭銜</td>
-          <td>操作</td>
+          <td style="width: 185px;">ID</td>
+          <td style="width: 75px;">名稱</td>
+          <td style="min-width: 222px;">頭銜</td>
+          <td class="sa_show hidden" style="width: 85px;">操作</td>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>OTK</td>
-          <td>歐庭愷</td>
-          <td>學權部部長</td>
-          <td>
-            <a data-toggle="modal" data-target="#EditModal">
-              <span class="text-primary">編輯</span>
-            </a>
-             |
-            <a data-toggle="modal" data-target="#StopPermissionModal">
-              <span class="text-warning">停權</span>
-            </a>
-          </td>
-        </tr>
-        <tr>
-          <td>OTK</td>
-          <td>歐庭愷</td>
-          <td>學權部部長</td>
-          <td>
-            <a data-toggle="modal" data-target="#EditModal">
-              <span class="text-primary">編輯</span>
-            </a>
-             |
-            <a data-toggle="modal" data-target="#StopPermissionModal">
-              <span class="text-warning">停權</span>
-            </a>
-          </td>
-        </tr>
-        <tr>
-          <td>OTK</td>
-          <td>歐庭愷</td>
-          <td>學權部部長</td>
-          <td>
-            <a data-toggle="modal" data-target="#EditModal">
-              <span class="text-primary">編輯</span>
-            </a>
-             |
-            <a data-toggle="modal" data-target="#StopPermissionModal">
-              <span class="text-warning">停權</span>
-            </a>
-          </td>
-        </tr>
       </tbody>
     </table>
   </div>
 
   <div class="div-center alert bg-white-2 bk-track">
     <h4>歷任管理者清單</h4>
-    <table class="table">
+    <table id="was_manager_list" class="table">
       <thead>
         <tr>
-          <td>ID</td>
-          <td>名稱</td>
-          <td>頭銜</td>
-          <td>操作</td>
+          <td style="width: 185px;">ID</td>
+          <td style="width: 75px;">名稱</td>
+          <td style="min-width: 222px;">頭銜</td>
+          <td class="sa_show hidden" style="width: 85px;">操作</td>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>OTK</td>
-          <td>歐庭愷</td>
-          <td>學權部部長</td>
-          <td>
-            <a data-toggle="modal" data-target="#RecoverPermissionModal">
-              <span class="text-warning">復權</span>
-            </a>
-          </td>
-        </tr>
-        <tr>
-          <td>OTK</td>
-          <td>歐庭愷</td>
-          <td>學權部部長</td>
-          <td>
-            <a data-toggle="modal" data-target="#RecoverPermissionModal">
-              <span class="text-warning">復權</span>
-            </a>
-          </td>
-        </tr>
-        <tr>
-          <td>OTK</td>
-          <td>歐庭愷</td>
-          <td>學權部部長</td>
-          <td>
-            <a data-toggle="modal" data-target="#RecoverPermissionModal">
-              <span class="text-warning">復權</span>
-            </a>
-          </td>
-        </tr>
       </tbody>
     </table>
   </div>
 
   <div class="div-center alert bg-white-2 bk-track">
     <h4>停復權歷史記錄</h4>
-    <table class="table">
+    <table id="manager_action_list" class="table">
       <thead>
         <tr>
-          <td>日期</td>
-          <td>ID</td>
-          <td>動作</td>
+          <td style="width: 96px;">日期</td>
+          <td style="width: 47px;">動作</td>
           <td>理由</td>
+          <td class="manager_show hidden">Operator</td>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>2013/03/21</td>
-          <td>OTK</td>
-          <td>停權</td>
-          <td>十八屆任期已滿，卸任</td>
-        </tr>
-        <tr>
-          <td>2013/03/21</td>
-          <td>OTK</td>
-          <td>停權</td>
-          <td>十八屆任期已滿，卸任</td>
-        </tr>
-        <tr>
-          <td>2013/03/21</td>
-          <td>OTK</td>
-          <td>停權</td>
-          <td>十八屆任期已滿，卸任</td>
-        </tr>
       </tbody>
     </table>
   </div>
-  <div class="div-center alert bg-red-2 bk-track">
+
+  <div class="div-center alert bg-red-2 bk-track sa_show hidden">
     <h4>新增管理者</h4>
     <div>
       <form class="form-inline" role="form">
@@ -159,7 +70,7 @@
     </div>
   </div>
 
-  <div class="div-center alert bg-red-2 bk-track">
+  <div class="div-center alert bg-red-2 bk-track sa_show hidden">
     <h4>刪除管理者</h4>
     <div>
       <p>
