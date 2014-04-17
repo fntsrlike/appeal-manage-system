@@ -115,7 +115,7 @@ return array(
                 ),
                 'messages' => array(
                     'reason.required'   => '理由為必填欄位',
-                    'status.required'   => '狀態類型為必填欄位'
+                    'status.required'   => '狀態類型為必填欄位',
                     'status.in'         => '您指定的狀態類型不存在'
                 )
             ),

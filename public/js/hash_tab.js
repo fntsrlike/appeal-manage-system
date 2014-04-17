@@ -28,7 +28,7 @@ $(function() {
     } else {
       $( 'ul.nav a[href="#appeal-view"]' ).tab( 'show' );
       ns_hash.case_id = hash.substring( 13 );
-      ns_appeal.show( ns_hash.case_id )
+      ns_appeal.cases.show( ns_hash.case_id )
     }
   };
 

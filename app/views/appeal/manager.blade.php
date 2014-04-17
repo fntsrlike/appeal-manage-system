@@ -100,31 +100,37 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="EditModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <form class="form-horizontal" role="form">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title" id="myModalLabel">編輯</h4>
+          <h4 class="modal-title" id="EditModalLabel">編輯</h4>
         </div>
         <div class="modal-body">
           <div class="form-group">
             <label class="col-sm-2 control-label">名稱</label>
             <div class="col-sm-10">
-              <p class="form-control-static">歐庭愷（Otk）</p>
+              <p id="EditModal_name" class="form-control-static">歐庭愷（Otk）</p>
             </div>
           </div>
           <div class="form-group">
-            <label for="inputTitle" class="col-sm-2 control-label">頭銜</label>
+            <label for="EditModal_title" class="col-sm-2 control-label">頭銜</label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" id="inputTitle" placeholder="輸入該管理者的頭銜">
+              <input type="text" class="form-control" name="title" id="EditModal_title" placeholder="輸入該管理者的頭銜">
             </div>
-         </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label"></label>
+            <div class="col-sm-10" id="EditModal_msg">
+            </div>
+          </div>
         </div>
         <div class="modal-footer">
+          <input type="hidden" name="id" id="EditModal_id" />
           <button type="button" class="btn btn-default" data-dismiss="modal">關閉</button>
-          <button type="button" class="btn btn-primary">儲存</button>
+          <button type="submit" class="btn btn-primary">儲存</button>
         </div>
       </form>
     </div><!-- /.modal-content -->
@@ -132,39 +138,46 @@
 </div><!-- /.modal -->
 
 <!-- Modal -->
-<div class="modal fade" id="StopPermissionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="StopPermissionModal" tabindex="-1" role="dialog" aria-labelledby="StopPermissionModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <form class="form-horizontal" role="form">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title" id="StopPermissionModalLabel">停止權限</h4>
+          <h4 class="modal-title" id="StopPermissionModalLabel">凍結權限</h4>
         </div>
         <div class="modal-body">
           <div class="form-group">
             <label class="col-sm-2 control-label">名稱</label>
             <div class="col-sm-10">
-              <p class="form-control-static">歐庭愷（Otk）</p>
+              <p id="StopPermissionModal_name" class="form-control-static">...</p>
             </div>
           </div>
           <div class="form-group">
-            <label for="inputStopPermission" class="col-sm-2 control-label">理由</label>
+            <label for="StopPermissionModal_reason" class="col-sm-2 control-label">理由</label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" id="inputStopPermission" placeholder="輸入恢復權限的理由">
+              <input type="text" class="form-control" name="reason" id="StopPermissionModal_reason" placeholder="輸入凍結權限的理由">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label"></label>
+            <div class="col-sm-10" id="StopPermissionModal_msg">
             </div>
           </div>
         </div>
         <div class="modal-footer">
+          <input type="hidden" name="id" id="StopPermissionModal_id" />
           <button type="button" class="btn btn-default" data-dismiss="modal">關閉</button>
-          <button type="button" class="btn btn-primary">確定停權</button>
+          <button type="submit" class="btn btn-primary">確定凍權</button>
         </div>
-      </form>    </div><!-- /.modal-content -->
+      </form>
+    </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
 
 <!-- Modal -->
-<div class="modal fade" id="RecoverPermissionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="RecoverPermissionModal" tabindex="-1" role="dialog" aria-labelledby="RecoverPermissionModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <form class="form-horizontal" role="form">
@@ -176,19 +189,25 @@
           <div class="form-group">
             <label class="col-sm-2 control-label">名稱</label>
             <div class="col-sm-10">
-              <p class="form-control-static">歐庭愷（Otk）</p>
+              <p id="RecoverPermissionModal_name" class="form-control-static">...</p>
             </div>
           </div>
           <div class="form-group">
-           <label for="inputRecoverPermission" class="col-sm-2 control-label">理由</label>
+           <label for="RecoverPermissionModal_reason" class="col-sm-2 control-label">理由</label>
            <div class="col-sm-10">
-             <input type="text" class="form-control" id="inputRecoverPermission" placeholder="輸入停止權限的理由">
+             <input type="text" class="form-control" name="reason" id="RecoverPermissionModal_reason" placeholder="輸入恢復權限的理由">
            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label"></label>
+            <div class="col-sm-10" id="RecoverPermissionModal_msg">
+            </div>
           </div>
         </div>
         <div class="modal-footer">
+          <input type="hidden" name="id" id="RecoverPermissionModal_id" />
           <button type="button" class="btn btn-default" data-dismiss="modal">關閉</button>
-          <button type="button" class="btn btn-primary">確定復權</button>
+          <button type="submit" class="btn btn-primary">確定復權</button>
         </div>
       </form>
     </div><!-- /.modal-content -->

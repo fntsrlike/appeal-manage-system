@@ -1,44 +1,51 @@
+var
+ns_user,
+ns_appeal;
+
 $( function() {
+  ns_user   = {
+    'status': false,
+    'name'  : '',
+    'u_id'  : 0,
+    'c_id'  : 0,
+    'm_id'  : 0,
+    'is_sa' : null,
+  };
 
-  ns_appeal = {};
-  ns_user   = {};
+  ns_appeal = {
+    'cases'    : {},
+    'replies'  : {},
+    'managers' : {},
+    'actions'  : {},
+  };
 
-  ns_user.status = false;
-  ns_user.name = '';
-  ns_user.u_id = 0;
-  ns_user.c_id = 0;
-  ns_user.m_id = 0;
-  ns_user.is_sa= null;
-
-  ns_user.update = function( ) {
-    var url  = $( '#api_user' ).attr( 'action' );
+  ns_user.update = function() {
+    var url  = $( '#api_user_url' ).attr( 'action' );
 
     $.get( url, function( data ){
-      if ( data.status === true ) {
-        ns_user.status = data.status;
-        ns_user.name = data.username;
-        ns_user.u_id = data.u_id;
-        ns_user.c_id = data.c_id;
-        ns_user.m_id = data.m_id;
-        ns_user.is_sa = data.is_sa;
-      }
-      else {
-        ns_user.status = false;
-        ns_user.name = '';
-        ns_user.u_id = 0;
-        ns_user.c_id = 0;
-        ns_user.m_id = 0;
-        ns_user.is_sa= null;
+      if ( true === data.status ) {
+        ns_user.status  = data.status;
+        ns_user.name    = data.username;
+        ns_user.u_id    = data.u_id;
+        ns_user.c_id    = data.c_id;
+        ns_user.m_id    = data.m_id;
+        ns_user.is_sa   = data.is_sa;
+      } else {
+        ns_user.status  = false;
+        ns_user.name    = '';
+        ns_user.u_id    = 0;
+        ns_user.c_id    = 0;
+        ns_user.m_id    = 0;
+        ns_user.is_sa   = null;
       }
     })
     .done( function() {
       ns_user.update_view();
     });
-
   };
 
   ns_user.update_view = function() {
-    if ( ns_user.status === true ) {
+    if ( true === ns_user.status ) {
       $( '.login_show' ).removeClass('hidden');
       $( '.login_hidden' ).addClass('hidden');
     }
@@ -47,13 +54,13 @@ $( function() {
       $( '.login_hidden' ).removeClass('hidden');
     }
 
-    if ( ( ns_user.m_id > 0 ) || ( ns_user.is_sa === true ) === true ) {
+    if ( ( ns_user.m_id > 0 ) || ( ns_user.is_sa === true ) ) {
       $( '.manager_show').removeClass('hidden');
     } else {
       $( '.manager_show').addClass('hidden');
     }
 
-    if ( ns_user.is_sa === true ) {
+    if ( true === ns_user.is_sa ) {
       $( '.sa_show' ).removeClass('hidden');
     } else {
       $( '.sa_show' ).addClass('hidden');
@@ -61,37 +68,51 @@ $( function() {
   };
 
   ns_appeal.run = function() {
-    $( '#appeal_form' ).submit( function( event ) {
-      event.preventDefault();
-      ns_appeal.store( $( this ) );
-    });
+    ns_appeal.listener();
+    ns_appeal.update();
+  };
 
-    $( '#appeal-status button' ).click(function( event ) {
+  ns_appeal.listener = function() {
+    $( '#appeal-status button' ).click( function( event ) {
       event.preventDefault();
       var status = $( this ).attr ('value' );
-      ns_appeal.show_list( status );
+      ns_appeal.cases.show_list( status );
+    });
+
+    $( '#appeal_form' ).submit( function( event ) {
+      event.preventDefault();
+      ns_appeal.cases.store( $( this ) );
     });
 
     $( '#reply_form' ).submit( function( event ) {
       event.preventDefault();
-      ns_appeal.store_reply( $( this ) );
+      ns_appeal.replies.store( $( this ) );
     });
 
-    ns_user.update();
-    ns_appeal.show_list(0);
-    ns_appeal.show_manager_list();
-    ns_appeal.show_manager_actions();
+    $( '#EditModal form' ).submit( function( event ) {
+      event.preventDefault();
+      ns_appeal.managers.update_files( $( this ) );
+    });
 
+    $( '#StopPermissionModal form' ).submit( function( event ) {
+      event.preventDefault();
+      ns_appeal.managers.update_status( $( this ), 'stop' );
+    });
+
+    $( '#RecoverPermissionModal form' ).submit( function( event ) {
+      event.preventDefault();
+      ns_appeal.managers.update_status( $( this ), 'recover' );
+    });
   };
 
   ns_appeal.update = function() {
-    ns_appeal.show_list(0);
     ns_user.update();
-    ns_appeal.show_manager_list();
-    ns_appeal.show_manager_actions();
+    ns_appeal.cases.show_list( 0 );
+    ns_appeal.managers.show_list();
+    ns_appeal.actions.show_managers();
   };
 
-  ns_appeal.store = function( form ) {
+  ns_appeal.cases.store = function( form ) {
     var
     url = form.attr( "action" ),
     input = {
@@ -119,11 +140,10 @@ $( function() {
 
           hash = window.location.hash = '#appeal-view-' + data.case_id;
           hash && $( 'ul.nav a[href="' + hash + '"]' ).tab( 'show' );
-        }
-        else {
+        } else {
           msgs = '<ul>';
 
-          for ( key in data.msg ) {
+          for ( var key in data.msg ) {
             msgs += '<li><span class="text-danger">' + data.msg[key] + '</span></li>';
           }
 
@@ -139,19 +159,15 @@ $( function() {
     });
   };
 
-  // ns_appeal.update = function() {
-
-  // };
-
-  ns_appeal.show = function( case_id ) {
+  ns_appeal.cases.show = function( case_id ) {
     var
-    url  = $( '#show_list' ).attr( 'action' ) + '/' + case_id,
+    url  = $( '#api_case_url' ).attr( 'action' ) + '/' + case_id,
     grade = { '1' : '一年級', '2' : '二年級', '3' : '三年級', '4' : '四年級', '5' : '四年級Up' };
 
     $.get(url, function(data){
 
       if ( data.length === 0 ) {
-        console.log('case unexist');
+        alert( '您所要求的申訴案件並不存在！' );
         return;
       }
 
@@ -180,7 +196,7 @@ $( function() {
       $( '#appeal-view-report' ).html( data.report );
       $( '#appeal-view-id' ).attr( 'value', case_id );
 
-      ns_appeal.show_replies( case_id );
+      ns_appeal.replies.show( case_id );
 
       if ( ns_user.name != data.name ) {
         $( '#reply_form textarea' ).attr('disabled', 'disabled');
@@ -194,16 +210,16 @@ $( function() {
     });
   };
 
-  ns_appeal.show_list = function( status ) {
+  ns_appeal.cases.show_list = function( status ) {
     var
     case_list = [],
-    url  = $( '#show_list' ).attr( 'action' );
+    url  = $( '#api_case_url' ).attr( 'action' );
 
     $.get( url, function( data ){
       if ( status != '0' ) {
         for ( var key in data ) {
           if ( ( status == '4' ) ) {
-            if ( data[key].is_owner === true ) {
+            if ( true === data[key].is_owner ) {
               case_list.push( data[key] );
             }
           } else if ( data[key].status == status ) {
@@ -215,14 +231,14 @@ $( function() {
         case_list = data;
       }
 
-      ns_appeal.make_list_rows( case_list );
+      ns_appeal.cases.make_list( case_list );
     });
   };
 
-  ns_appeal.make_list_rows = function( case_list ) {
-    var href, tmp, key, trs = '';
+  ns_appeal.cases.make_list = function( case_list ) {
+    var href, tmp, trs = '';
 
-    for ( key in case_list) {
+    for ( var key in case_list) {
 
       href = '<a href="#appeal-view-' + case_list[key].id + '">';
       href += case_list[key].title + '</a>';
@@ -230,7 +246,7 @@ $( function() {
       tmp = '<tr>';
       tmp += '<td class="text-center">' + case_list[key].created_at.date. substring(0,10) + '</td>';
       tmp += '<td>' + href + '</td>';
-      tmp += ns_appeal.make_list_status(case_list[key].status, case_list[key].replies_count);
+      tmp += ns_appeal.cases.make_list_status(case_list[key].status, case_list[key].replies_count);
       tmp += '</tr>';
 
       trs += tmp;
@@ -238,22 +254,25 @@ $( function() {
     $( '#list_table tbody' ).html( trs );
   };
 
-  ns_appeal.make_list_status = function( status, reply_no ) {
-    status = '' + status;
+  ns_appeal.cases.make_list_status = function( status, reply_no ) {
     var msg = '';
+
     switch( status ) {
-      case '1':
+      case 1:
         msg += '<td class="text-danger text-center">';
         msg += '未處理 <span class="label label-danger">' + reply_no + '</span></td>';
         break;
-      case '2':
+
+      case 2:
         msg += '<td class="text-warning text-center">';
         msg += '處理中 <span class="label label-warning">' + reply_no + '</span></td>';
         break;
-      case '3':
+
+      case 3:
         msg += '<td class="text-success text-center">';
         msg += '處理完畢 <span class="label label-success">' + reply_no + '</span></td>';
         break;
+
       default:
         msg += '<td class="text-muted text-center">';
         msg += '讀取錯誤 <span class="label label-default">??</span></td>';
@@ -263,7 +282,7 @@ $( function() {
     return msg;
   };
 
-  ns_appeal.store_reply = function( form ) {
+  ns_appeal.replies.store = function( form ) {
     var
     url = form.attr( "action" ),
     input = {
@@ -284,7 +303,7 @@ $( function() {
             this.reset();
           });
 
-          ns_appeal.show_replies( input.case_id );
+          ns_appeal.replies.show( input.case_id );
         }
         else if ( data.status == '400 Bad Request' ) {
           msgs = '<ul>';
@@ -306,11 +325,11 @@ $( function() {
     });
   };
 
-  ns_appeal.show_replies = function( case_id ) {
+  ns_appeal.replies.show = function( case_id ) {
     var
     url  = $( '#replies_list' ).attr( 'action' ) + '?case_id=' + case_id;
 
-    $.get(url, function(data){
+    $.get( url, function( data ){
 
       if ( ( data.length === 0 ) || ( data.status == '400 Bad Request' ) ) {
         $('#appeal-view-dialog').html('<p class="text-danger text-center">對話讀取錯誤</p>');
@@ -325,14 +344,13 @@ $( function() {
       if ( data.replies_count <= 0 ) {
         $('#appeal-view-dialog').html('<p class="text-info text-center">目前沒有對話</p>');
         return;
-      };
+      }
 
-      ns_appeal.make_replies( data.replies );
-
+      ns_appeal.replies.make( data.replies );
     });
   };
 
-  ns_appeal.make_replies = function( replies ) {
+  ns_appeal.replies.make = function( replies ) {
     var
     reply,
     location,
@@ -360,15 +378,14 @@ $( function() {
       blocks += block;
     }
 
-
     $('#appeal-view-dialog').html(blocks);
   };
 
-  ns_appeal.show_manager_list = function() {
+  ns_appeal.managers.show_list = function() {
     var
-    url  = $( '#api_manager_list' ).attr( 'action' );
+    url  = $( '#api_manager_url' ).attr( 'action' );
 
-    $.get(url, function(data){
+    $.get( url, function( data ){
       var
       being_managers = [],
       was_managers   = [],
@@ -382,20 +399,22 @@ $( function() {
         manager = data.managers[key];
 
         if ( manager.status == 1 ) {
-          being_managers.push(manager);
+          being_managers.push( manager );
         }
         else if ( manager.status == 2 ) {
-          was_managers.push(manager);
+          was_managers.push( manager );
         }
       }
 
-
-      ns_appeal.make_manager_list( 'being', being_managers );
-      ns_appeal.make_manager_list( 'was', was_managers );
+      ns_appeal.managers.make_list( 'being', being_managers );
+      ns_appeal.managers.make_list( 'was', was_managers );
+    })
+    .done(function(){
+      ns_appeal.managers.refresh_listener();
     });
   };
 
-  ns_appeal.make_manager_list = function( type, list ) {
+  ns_appeal.managers.make_list = function( type, list ) {
     var
     hash = type + '_manager_list' ,
     rows = '',
@@ -414,11 +433,11 @@ $( function() {
           row += '<td>';
           row += '<a data-toggle="modal" data-target="#EditModal" for="' + manager.m_id + '"><span class="text-primary">編輯</span></a>';
           row += ' | ';
-          row += '<a data-toggle="modal" data-target="#StopPermissionModal" for="' + manager.m_id + '"><span class="text-warning">停權</span></a>';
+          row += '<a data-toggle="modal" data-target="#StopPermissionModal" for="' + manager.m_id + '"><span class="text-warning">凍權</span></a>';
           row += '</td>';
         }
         else if ( type == 'was' ) {
-          row += '<td><a data-toggle="modal" data-target="#RecoverPermissionModal" for="' + manager.m_id + '"><span class="text-warning">停權</span></a></td>';
+          row += '<td><a data-toggle="modal" data-target="#RecoverPermissionModal" for="' + manager.m_id + '"><span class="text-warning">復權</span></a></td>';
         }
       }
 
@@ -427,51 +446,187 @@ $( function() {
       rows += row;
     }
 
-    $( '#' + hash + ' tbody' ).html( row );
+    $( '#' + hash + ' tbody' ).html( rows );
   };
 
-  ns_appeal.show_manager_actions = function() {
-    var
-    url  = $( '#api_action_list' ).attr( 'action' );
+  ns_appeal.managers.refresh_listener = function() {
+    $( 'a[data-target="#EditModal"]' ).click( function() {
+      var id = $( this ).attr( 'for' );
+      ns_appeal.managers.edit_files( id );
+    });
 
-    url += '?args=RECOVERY_MANAGER_PERM+STOP_MANAGER_PERM';
+    $( 'a[data-target="#StopPermissionModal"]' ).click( function() {
+      var id = $( this ).attr( 'for' );
+      ns_appeal.managers.edit_status( id, 'stop' );
+    });
 
-    $.get(url, function(data){
-
-      if ( data.length === 0 || data.actions === 0 ) {
-        return;
-      }
-
-      ns_appeal.make_manager_actions( data.actions );
+    $( 'a[data-target="#RecoverPermissionModal"]' ).click( function() {
+      var id = $( this ).attr( 'for' );
+      ns_appeal.managers.edit_status( id, 'recover' );
     });
   };
 
-  ns_appeal.make_manager_actions = function( list ) {
+  ns_appeal.actions.show_managers = function() {
+    var
+    url  = $( '#api_action_url' ).attr( 'action' );
+
+    url += '?args=RECOVERY_MANAGER_PERM+STOP_MANAGER_PERM';
+
+    $.get( url, function( data ){
+
+      if ( 0 === data.length || 0 === data.actions ) {
+        return;
+      }
+
+      ns_appeal.actions.make_managers( data.actions );
+    });
+  };
+
+  ns_appeal.actions.make_managers = function( list ) {
     var
     action,
     rows = '',
     row,
-    type = {'RECOVERY_MANAGER_PERM' : '復權', 'STOP_MANAGER_PERM' : '停權'},
+    type = {'RECOVERY_MANAGER_PERM' : '復權', 'STOP_MANAGER_PERM' : '凍權'},
     perm = ( ns_user.m_id > 0 ) || ( ns_user.is_sa === true ) ;
 
     for ( var key in list ) {
       action = list[key];
 
       row = '<tr>';
-      row += '<td>' + action.datetime.date.substring(0,10) + '</td>';
-      row += '<td>' + type[action.type]     + '</td>';
-      row += '<td>' + action.reason         + '</td>';
-
-      if ( perm === true ) {
-        row += '<td>' + action.operator + '</td>';
-      }
+      row += '<td>' + action.datetime.date.substring( 0, 10 ) + '</td>';
+      row += '<td>' + type[action.type] + '</td>';
+      row += '<td>' + action.reason     + '</td>';
+      row += ( true === perm ) ? '<td>' + action.operator + '</td>' : '';
       row += '</tr>';
 
       rows += row;
     }
 
-    $( '#manager_action_list tbody' ).html(rows);
+    $( '#manager_action_list tbody' ).html( rows );
 
+  };
+
+  ns_appeal.managers.edit_files = function( id ) {
+    var
+    url = $( '#api_manager_url' ).attr( 'action' ) + '/' + id;
+
+    $.get( url, function( data ) {
+      var manager = data.manager;
+
+      $( '#EditModal_name' ).html( manager.name + '（' + manager.username + '）' );
+      $( '#EditModal_title' ).val( manager.title );
+      $( '#EditModal_id' ).val( id );
+      $( '#EditModal_msg' ).html('');
+    });
+  };
+
+  ns_appeal.managers.edit_status = function( id, type ) {
+    var
+    url = $( '#api_manager_url' ).attr( 'action' ) + '/' + id,
+    type_hash = { 'stop' : 'StopPermissionModal', 'recover' : 'RecoverPermissionModal' },
+    hash = '#' + type_hash[type];
+
+    $.get( url, function( data ) {
+      var manager = data.manager;
+
+      $( hash + '_reason' ).val( '' );
+      $( hash + '_name' ).html( manager.name + '（' + manager.username + '）' );
+      $( hash + '_id' ).val( id );
+      $( hash + '_msg' ).html('');
+    });
+  };
+
+  ns_appeal.managers.update_files = function( form ) {
+    var
+    id  = form.find( 'input[name="id"]' ).val(),
+    url = $( '#api_manager_url' ).attr( 'action' ) + '/' + id,
+    input = {
+      'type'  : 'files',
+      'title' : form.find( 'input[name="title"]' ).val()
+    };
+
+    $.ajax({
+      url: url,
+      type: 'PUT',
+      data: input,
+      dataType: 'json',
+      success: function(data) {
+        var
+        msg, msgs;
+
+        if ( data.status == '200 OK' ) {
+          alert('您的修改已經成功送出！');
+          $( '#EditModal' ).modal( 'hide' );
+        } else {
+          msgs = '<ul>';
+
+          for ( var key in data.msg ) {
+            msg = '<li><span class="text-danger">';
+            msg += data.msg[key];
+            msg += '</span></li>';
+
+            msgs += msg;
+          }
+          msgs += '</ul>';
+
+          $( '#EditModal_msg' ).html( msgs );
+        }
+      }
+    })
+    .fail(function() {
+      //
+    })
+    .done(function() {
+      ns_appeal.managers.show_list();
+    });
+  };
+
+  ns_appeal.managers.update_status = function( form, status ) {
+    var
+    id    = form.find( 'input[name="id"]' ).val(),
+    hash  = { 'stop' : 'StopPermissionModal', 'recover' : 'RecoverPermissionModal'},
+    url   = $( '#api_manager_url' ).attr( 'action' ) + '/' + id,
+    input = {
+      'type'    : 'status',
+      'reason'  : form.find( 'input[name="reason"]' ).val(),
+      'status'  : status
+    };
+
+    $.ajax({
+      url: url,
+      type: 'PUT',
+      data: input,
+      dataType: 'json',
+      success: function(data) {
+        var
+        msg, msgs;
+
+        if ( data.status == '200 OK' ) {
+          alert('您的修改已經成功送出！');
+          $( '#' + hash[status] ).modal( 'hide' );
+        } else {
+          msgs = '<ul>';
+
+          for ( var key in data.msg ) {
+            msg = '<li><span class="text-danger">';
+            msg += data.msg[key];
+            msg += '</span></li>';
+
+            msgs += msg;
+          }
+          msgs += '</ul>';
+
+          $( '#' + hash[status] + '_msg' ).html( msgs );
+        }
+      }
+    })
+    .fail(function() {
+      //
+    })
+    .done(function() {
+      ns_appeal.managers.show_list();
+    });
   };
 
   ns_appeal.run();

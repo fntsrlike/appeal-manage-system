@@ -40,8 +40,8 @@ class API_ManagerController extends \BaseController {
      */
     public function store()
     {
-        $rules      = Config::get('vallidation.manager.store.rules');
-        $messages   = Config::get('vallidation.manager.store.massages');
+        $rules      = Config::get('validation.manager.store.rules');
+        $messages   = Config::get('validation.manager.store.massages');
         $validator  = Validator::make(Input::all(), $rules, $messages);
 
         if ($validator->fails()) {
@@ -95,7 +95,7 @@ class API_ManagerController extends \BaseController {
         $m['title']     = $manager->m_title;
         $m['status']    = $manager->m_status;
 
-        $response['managers'] = $m;
+        $response['manager'] = $m;
         $response['status'] = '200 OK';
         return Response::json($response);
     }
@@ -108,8 +108,10 @@ class API_ManagerController extends \BaseController {
      */
     public function update($id)
     {
-        $rules      = Config::get('vallidation.manager.update.type');
-        $messages   = Config::get('vallidation.manager.update.type');
+
+
+        $rules      = Config::get('validation.manager.update.type.rules');
+        $messages   = Config::get('validation.manager.update.type.messages');
         $validator  = Validator::make(Input::all(), $rules, $messages);
 
         if ($validator->fails()) {
@@ -120,10 +122,10 @@ class API_ManagerController extends \BaseController {
             return Response::json($response);
         }
 
-        $type = Input::get('type');
 
-        $rules      = Config::get('vallidation.manager.update.' . $type);
-        $messages   = Config::get('vallidation.manager.update.' . $type);
+        $type = Input::get('type');
+        $rules      = Config::get('validation.manager.update.' . $type . '.rules');
+        $messages   = Config::get('validation.manager.update.' . $type . '.messages');
         $validator  = Validator::make(Input::all(), $rules, $messages);
 
         if ($validator->fails()) {
@@ -137,18 +139,35 @@ class API_ManagerController extends \BaseController {
         $manager = Manager::find($id);
 
         if ( $type == 'files' ) {
-            $manager->title = Input::get('title');
+            $manager->m_title = Input::get('title');
             $manager->save();
         }
         else if ( $type == 'status' ) {
             $status = Input::get('status');
+            $hash   = array('recover' => 1, 'stop' => 2);
 
-            $manager->status = $status;
+            if ( $manager->m_status == $hash[$status] ) {
+                $response['status'] = '400 Bad Request';
+                $response['msg'] = '無法對已經是某狀態的管理員再次設定某狀態';
+
+                return Response::json($response);
+            }
+
+            $manager->m_status = $hash[$status];
             $manager->save();
+
+            $username   = IltUser::find($manager->u_id)->username;
+            $operator   = Session::get('user.username');
+            $reason     = Input::get('reason');
+
+            $msg = "{$username} 因為理由「{$reason}」，所以被 {$operator} ";
+            $msg .= ( $status == 'stop' ) ? "凍結管理者的權限。" : "恢復管理者的權限";
 
             $action = new Action;
             $action->type   = ($status == 1) ? 'RECOVERY_MANAGER_PERM' : 'STOP_MANAGER_PERM';
-            $action->event  = Input::get('reason');
+            $action->event  = $msg;
+            $action->operator_u_id = Session::get('user.u_id');
+            $action->save();
         }
 
         $response['status'] = '200 OK';
@@ -167,8 +186,8 @@ class API_ManagerController extends \BaseController {
             $m['id']     = $manager->m_id;
         }
 
-        $rules      = Config::get('vallidation.manager.delete');
-        $messages   = Config::get('vallidation.manager.delete');
+        $rules      = Config::get('validation.manager.delete');
+        $messages   = Config::get('validation.manager.delete');
         $validator  = Validator::make(Input::all(), $rules, $messages);
 
         if ($validator->fails()) {
