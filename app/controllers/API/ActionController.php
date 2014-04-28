@@ -12,7 +12,7 @@ class API_ActionController extends \BaseController {
         $is_sa = ( Session::has('user.login') and (Session::get('user.is_sa') == true) );
         $is_manager = ( Session::has('user.login') and (Session::get('user.m_id') > 0) );
 
-        $allow_action   = array('RECOVERY_MANAGER_PERM','STOP_MANAGER_PERM');
+        $allow_action   = array('RECOVERY_MANAGER_PERM','STOP_MANAGER_PERM','DELETE_MANAGER_PERM');
         $sa_only_action = array();
 
         if ( !Input::has('args') ) {

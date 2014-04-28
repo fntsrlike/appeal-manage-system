@@ -123,11 +123,15 @@ return array(
         'delete' => array(
             'rules' => array(
                 'username'  => 'required',
-                'name'      => 'required'
+                'name'      => 'required',
+                'reason'    => 'required',
+                'id'        => 'exists:appeal_managers,u_id'
             ),
             'messages' => array(
                 'username.required' => '使用者名稱（ID）為必填欄位',
-                'name.required'     => '管理員名稱為必填欄位'
+                'name.required'     => '管理員名稱為必填欄位',
+                'reason.required'   => '刪除理由為必填欄位',
+                'id.exists'         => '該管理員並不存在！'
             )
         ),
     ),

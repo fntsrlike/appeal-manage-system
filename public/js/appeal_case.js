@@ -103,13 +103,25 @@ $( function() {
       event.preventDefault();
       ns_appeal.managers.update_status( $( this ), 'recover' );
     });
+
+    $( '#DeleteModal form' ).submit( function( event ) {
+      event.preventDefault();
+      ns_appeal.managers.destroy( $( this ) );
+    });
+
+    $( '#CreateManager form' ).submit( function( event ) {
+      event.preventDefault();
+      ns_appeal.managers.update_status( $( this ) );
+      event.preventDefault();
+      ns_appeal.managers.store( $( this ) );
+    });
   };
 
   ns_appeal.update = function() {
     ns_user.update();
     ns_appeal.cases.show_list( 0 );
     ns_appeal.managers.show_list();
-    ns_appeal.actions.show_managers();
+    ns_appeal.actions.show_actions();
   };
 
   ns_appeal.cases.store = function( form ) {
@@ -121,8 +133,8 @@ $( function() {
       "place"   : form.find( "input[name='place']" ).val(),
       "date"    : form.find( "input[name='date']" ).val(),
       "content" : form.find( "textarea[name='content']" ).val(),
-      'privacy_case'        : form.find( "input[name='privacy_case']" ).val(),
-      'privacy_complainant' : form.find( "input[name='privacy_complainant']" ).val(),
+      'privacy_case'        : form.find( "input[name='privacy_case']:checked" ).val(),
+      'privacy_complainant' : form.find( "input[name='privacy_complainant']:checked" ).val(),
     };
 
     $.ajax({
@@ -327,7 +339,7 @@ $( function() {
 
   ns_appeal.replies.show = function( case_id ) {
     var
-    url  = $( '#replies_list' ).attr( 'action' ) + '?case_id=' + case_id;
+    url  = $( '#api_reply_url' ).attr( 'action' ) + '?case_id=' + case_id;
 
     $.get( url, function( data ){
 
@@ -437,7 +449,11 @@ $( function() {
           row += '</td>';
         }
         else if ( type == 'was' ) {
-          row += '<td><a data-toggle="modal" data-target="#RecoverPermissionModal" for="' + manager.m_id + '"><span class="text-warning">復權</span></a></td>';
+          row += '<td>';
+          row += '<a data-toggle="modal" data-target="#DeleteModal" for="' + manager.m_id + '"><span class="text-danger">刪除</span></a>';
+          row += ' | ';
+          row += '<a data-toggle="modal" data-target="#RecoverPermissionModal" for="' + manager.m_id + '"><span class="text-warning">復權</span></a>';
+          row += '</td>';
         }
       }
 
@@ -464,13 +480,18 @@ $( function() {
       var id = $( this ).attr( 'for' );
       ns_appeal.managers.edit_status( id, 'recover' );
     });
+
+    $( 'a[data-target="#DeleteModal"]' ).click( function() {
+      var id = $( this ).attr( 'for' );
+      ns_appeal.managers.delete( id );
+    });
   };
 
-  ns_appeal.actions.show_managers = function() {
+  ns_appeal.actions.show_actions = function() {
     var
     url  = $( '#api_action_url' ).attr( 'action' );
 
-    url += '?args=RECOVERY_MANAGER_PERM+STOP_MANAGER_PERM';
+    url += '?args=RECOVERY_MANAGER_PERM+STOP_MANAGER_PERM+DELETE_MANAGER_PERM';
 
     $.get( url, function( data ){
 
@@ -478,16 +499,20 @@ $( function() {
         return;
       }
 
-      ns_appeal.actions.make_managers( data.actions );
+      ns_appeal.actions.make_actions( data.actions );
     });
   };
 
-  ns_appeal.actions.make_managers = function( list ) {
+  ns_appeal.actions.make_actions = function( list ) {
     var
     action,
     rows = '',
     row,
-    type = {'RECOVERY_MANAGER_PERM' : '復權', 'STOP_MANAGER_PERM' : '凍權'},
+    type = {
+        'RECOVERY_MANAGER_PERM' : '復權',
+        'STOP_MANAGER_PERM'     : '凍權',
+        'DELETE_MANAGER_PERM'   : '刪除'
+      },
     perm = ( ns_user.m_id > 0 ) || ( ns_user.is_sa === true ) ;
 
     for ( var key in list ) {
@@ -618,6 +643,117 @@ $( function() {
           msgs += '</ul>';
 
           $( '#' + hash[status] + '_msg' ).html( msgs );
+        }
+      }
+    })
+    .fail(function() {
+      //
+    })
+    .done(function() {
+      ns_appeal.managers.show_list();
+      ns_appeal.actions.show_actions();
+    });
+  };
+
+  ns_appeal.managers.delete = function( id ) {
+    var
+    url = $( '#api_manager_url' ).attr( 'action' ) + '/' + id;
+
+    $.get( url, function( data ) {
+      var manager = data.manager;
+
+      $( '#DeleterModal_target' ).html( manager.name + '（' + manager.username + '）' );
+      $( '#DeleterModal_id' ).val( id );
+      $( '#DeleterModal_msg' ).html('');
+      $( '#DeleterModal_username' ).val('');
+      $( '#DeleterModal_name' ).val('');
+    });
+  };
+
+  ns_appeal.managers.destroy = function( form ) {
+    var
+    id        = form.find( 'input[name="id"]' ).val(),
+    url       = $( '#api_manager_url' ).attr( 'action' ) + '/' + id,
+    input = {
+      'username': form.find( 'input[name="username"]' ).val(),
+      'name'    : form.find( 'input[name="name"]' ).val(),
+      'reason'  : form.find( 'input[name="reason"]' ).val()
+    };
+
+    $.ajax({
+      url: url,
+      type: 'DELETE',
+      data: input,
+      dataType: 'json',
+      success: function( data ) {
+        var
+        msg, msgs;
+
+        if ( data.status == '200 OK' ) {
+          alert('已經成功刪除該管理員！');
+          $( '#DeleterModal' ).modal( 'hide' );
+        } else {
+          msgs = '<ul>';
+
+          for ( var key in data.msg ) {
+            msg = '<li><span class="text-danger">';
+            msg += data.msg[key];
+            msg += '</span></li>';
+
+            msgs += msg;
+          }
+          msgs += '</ul>';
+
+          $( '#DeleterModal_msg' ).html( msgs );
+        }
+      }
+    })
+    .fail(function() {
+      //
+    })
+    .done(function() {
+      ns_appeal.managers.show_list();
+      ns_appeal.actions.show_actions();
+    });
+  };
+
+  ns_appeal.managers.store = function( form ) {
+    var
+    url       = $( '#api_manager_url' ).attr( 'action' ),
+    input = {
+      'username': form.find( 'input[name="username"]' ).val(),
+      'title'    : form.find( 'input[name="title"]' ).val(),
+    };
+
+    $.ajax({
+      url: url,
+      type: 'POST',
+      data: input,
+      dataType: 'json',
+      success: function( data ) {
+        var
+        msg, msgs;
+
+        if ( data.status == '200 OK' ) {
+          alert('已經成功新增該管理員！');
+          form.each( function() {
+            this.reset();
+          });
+        } else if ( data.status == '403 Forbidden' ) {
+          alert('您沒有權限進行此操作！');
+        } else {
+          msgs = '<ul>';
+
+          for ( var key in data.msg ) {
+            msg = '<li><span class="text-danger">';
+            msg += data.msg[key];
+            msg += '</span></li>';
+
+            msgs += msg;
+          }
+          msgs += '</ul>';
+
+          $( '#CreateManager_msg' ).html( msgs );
         }
       }
     })

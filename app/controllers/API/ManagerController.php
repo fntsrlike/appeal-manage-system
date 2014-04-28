@@ -40,8 +40,13 @@ class API_ManagerController extends \BaseController {
      */
     public function store()
     {
+        if (! ( Session::has('user.login') and (Session::get('user.is_sa') == true) )) {
+            $response['status'] = '403 Forbidden';
+            return Response::json($response);
+        }
+
         $rules      = Config::get('validation.manager.store.rules');
-        $messages   = Config::get('validation.manager.store.massages');
+        $messages   = Config::get('validation.manager.store.messages');
         $validator  = Validator::make(Input::all(), $rules, $messages);
 
         if ($validator->fails()) {
@@ -51,20 +56,30 @@ class API_ManagerController extends \BaseController {
 
             return Response::json($response);
         }
-        else {
-            $user        = IltUser::where('username', '=', Input::get('username'))->first();
-            $complainant = Complainant::where('u_id', '=', $user->u_id)->first();
-            $manager     = new Manager;
 
-            $manager->u_id    = $user->u_id;
-            $manager->m_name  = $complainant->name;
-            $manager->m_title = Input::get('title');
-            $manager->m_email = $complainant->email;
-            $manager->save();
+        $user        = IltUser::where('username', '=', Input::get('username'))->first();
+        $complainant = Complainant::where('u_id', '=', $user->u_id)->first();
+        $manager     = Manager::where('u_id', '=', $user->u_id)->first();;
 
-            $response['status'] = '200 OK';
+        if ( null !== $manager) {
+            $messages = $validator->messages()->all();
+            $response['status'] = '400 Bad Request';
+            $response['msg'] = array('該使用者已經是管理員了！');
+
             return Response::json($response);
         }
+
+
+        $manager = new Manager;
+        $manager->u_id    = $user->u_id;
+        $manager->m_name  = $complainant->c_name;
+        $manager->m_title = Input::get('title');
+        $manager->m_email = $complainant->c_email;
+        $manager->save();
+
+        $response['status'] = '200 OK';
+        return Response::json($response);
+
     }
 
     /**
@@ -108,7 +123,10 @@ class API_ManagerController extends \BaseController {
      */
     public function update($id)
     {
-
+        if (! ( Session::has('user.login') and (Session::get('user.is_sa') == true) )) {
+            $response['status'] = '403 Forbidden';
+            return Response::json($response);
+        }
 
         $rules      = Config::get('validation.manager.update.type.rules');
         $messages   = Config::get('validation.manager.update.type.messages');
@@ -182,12 +200,13 @@ class API_ManagerController extends \BaseController {
      */
     public function destroy($id)
     {
-        if ( Session::has('user.login') and (Session::get('user.is_sa') == true) ) {
-            $m['id']     = $manager->m_id;
+        if (! ( Session::has('user.login') and (Session::get('user.is_sa') == true) )) {
+            $response['status'] = '403 Forbidden';
+            return Response::json($response);
         }
 
-        $rules      = Config::get('validation.manager.delete');
-        $messages   = Config::get('validation.manager.delete');
+        $rules      = Config::get('validation.manager.delete.rules');
+        $messages   = Config::get('validation.manager.delete.messages');
         $validator  = Validator::make(Input::all(), $rules, $messages);
 
         if ($validator->fails()) {
@@ -199,20 +218,31 @@ class API_ManagerController extends \BaseController {
         }
 
         $user   = IltUser::where('username', '=', Input::get('username'))->first();
-        $manage = Manager::find($id);
+        $manager = Manager::find($id);
 
-        if ( $id != $user->u_id or $manage->m_name != Input::get('name') ) {
+        if ( $user->username  != Input::get('username') or $manager->m_name != Input::get('name') ) {
             $response['status'] = '400 Bad Request';
             $response['msg'] = array('您輸入的資料與要求的目標不符！');
 
             return Response::json($response);
         }
-        else {
-            $manager->delete();
 
-            $response['status'] = '200 OK';
-            return Response::json($response);
-        }
+        $manager->delete();
+
+        $username   = IltUser::find($manager->u_id)->username;
+        $operator   = Session::get('user.username');
+        $reason     = Input::get('reason');
+
+        $msg = "{$username} 因為理由「{$reason}」，所以被 {$operator} 刪除管理者的權限";
+
+        $action = new Action;
+        $action->type   = 'DELETE_MANAGER_PERM';
+        $action->event  = $msg;
+        $action->operator_u_id = Session::get('user.u_id');
+        $action->save();
+
+        $response['status'] = '200 OK';
+        return Response::json($response);
     }
 
 }

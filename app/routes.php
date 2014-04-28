@@ -28,7 +28,7 @@ Route::get('test', 'PortalController@test');
 # API
 Route::group(array('prefix' => 'v1/res/'), function()
 {
-    $API_only = array('only' => array('index', 'store', 'update', 'show', 'destory'));
+    $API_only = array('only' => array('index', 'store', 'update', 'show', 'destroy'));
 
     Route::get('user', 'PortalController@status');
     Route::resource('cases', 'API_CaseController', $API_only);
