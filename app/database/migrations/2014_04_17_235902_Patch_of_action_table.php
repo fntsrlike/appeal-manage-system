@@ -14,7 +14,7 @@ class PatchOfActionTable extends Migration {
     {
         Schema::table('appeal_actions', function($table)
         {
-            $table->dropUnique('operator_u_id');
+            $table->dropUnique('appeal_actions_operator_u_id_unique');
         });
 
     }
