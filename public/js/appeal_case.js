@@ -64,7 +64,7 @@ $( function() {
       $( '.login_hidden' ).removeClass('hidden');
     }
 
-    if ( ( ns_user.m_id > 0 ) || ( ns_user.is_sa === true ) ) {
+    if ( ( ns_user.m_id > 0 ) ) {
       $( '.manager_show').removeClass('hidden');
     } else {
       $( '.manager_show').addClass('hidden');
@@ -420,7 +420,7 @@ $( function() {
         return;
       }
 
-      if ( data.status == '401 Unauthorized' ) {
+      if ( data.status == '401 Unauthorized' || data.status == '403 Forbidden' ) {
         $('#appeal-view-dialog').html('<p class="text-info text-center">本申訴案留言已經設成隱藏。</p>');
         return;
       }
@@ -734,11 +734,12 @@ $( function() {
     $.get( url, function( data ) {
       var manager = data.manager;
 
-      $( '#DeleterModal_target' ).html( manager.name + '（' + manager.username + '）' );
-      $( '#DeleterModal_id' ).val( id );
-      $( '#DeleterModal_msg' ).html('');
-      $( '#DeleterModal_username' ).val('');
-      $( '#DeleterModal_name' ).val('');
+      $( '#DeleteModal_target' ).html( manager.name + '（' + manager.username + '）' );
+      $( '#DeleteModal_id' ).val( id );
+      $( '#DeleteModal_msg' ).html('');
+      $( '#DeleteModal_username' ).val('');
+      $( '#DeleteModal_name' ).val('');
+      $( '#DeleteModal_reason' ).val('');
     });
   };
 
@@ -763,7 +764,10 @@ $( function() {
 
         if ( data.status == '200 OK' ) {
           alert('已經成功刪除該管理員！');
-          $( '#DeleterModal' ).modal( 'hide' );
+          $( '#DeleteModal' ).modal( 'hide' );
+          form.each( function() {
+            this.reset();
+          });
         } else {
           msgs = '<ul>';
 
@@ -776,7 +780,7 @@ $( function() {
           }
           msgs += '</ul>';
 
-          $( '#DeleterModal_msg' ).html( msgs );
+          $( '#DeleteModal_msg' ).html( msgs );
         }
       }
     })

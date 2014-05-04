@@ -24,8 +24,6 @@ class API_ActionController extends \BaseController {
         $actions = Input::get('args');
         $actions = explode(' ', $actions);
 
-
-
         foreach ($actions as $action) {
             if ( in_array($action, $allow_action) === false ) {
                 if ( !( $is_sa and (in_array($action, $sa_only_action) === true) )) {
@@ -37,7 +35,7 @@ class API_ActionController extends \BaseController {
 
         }
 
-        $actions_orm = Action::whereIn('type', $actions)->get();
+        $actions_orm = Action::whereIn('type', $actions)->orderBy('created_at', 'desc')->get();
         $list        = array();
 
         foreach ($actions_orm as $action) {
@@ -54,7 +52,7 @@ class API_ActionController extends \BaseController {
             $list[] = $a;
         }
 
-        $response['status']  = '200-OK';
+        $response['status']  = '200 OK';
         $response['actions'] = $list;
         return Response::json($response);
     }

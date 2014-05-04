@@ -39,7 +39,7 @@
           <td style="width: 96px;">日期</td>
           <td style="width: 47px;">動作</td>
           <td>理由</td>
-          <td class="manager_show hidden">Operator</td>
+          <td class="manager_show sa_show hidden">Operator</td>
         </tr>
       </thead>
       <tbody>
@@ -190,7 +190,7 @@
       <form class="form-horizontal" role="form">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title" id="DeleterModalLabel">刪除管理員</h4>
+          <h4 class="modal-title" id="DeleteModalLabel">刪除管理員</h4>
         </div>
         <div class="modal-body">
 
@@ -202,36 +202,36 @@
                 </em>
               </p>
               <p class="form-control-static">
-                您要刪除的管理員是<span id="DeleterModal_target" class="text-info">...</span>嗎？
+                您要刪除的管理員是<span id="DeleteModal_target" class="text-info">...</span>嗎？
               </p>
             </div>
           </div>
           <div class="form-group">
-           <label for="DeleterModal_username" class="col-sm-3 control-label">管理員ID</label>
+           <label for="DeleteModal_username" class="col-sm-3 control-label">管理員ID</label>
            <div class="col-sm-9">
-             <input type="text" class="form-control" name="username" id="DeleterModal_username" placeholder="輸入該管理員的ＩＤ（Username）">
+             <input type="text" class="form-control" name="username" id="DeleteModal_username" placeholder="輸入該管理員的ＩＤ（Username）">
            </div>
           </div>
           <div class="form-group">
-           <label for="DeleterModal_name" class="col-sm-3 control-label">管理員名稱</label>
+           <label for="DeleteModal_name" class="col-sm-3 control-label">管理員名稱</label>
            <div class="col-sm-9">
-             <input type="text" class="form-control" name="name" id="DeleterModal_name" placeholder="輸入該管理員的名稱">
+             <input type="text" class="form-control" name="name" id="DeleteModal_name" placeholder="輸入該管理員的名稱">
            </div>
           </div>
           <div class="form-group">
-           <label for="DeleterModal_reason" class="col-sm-3 control-label">理由</label>
+           <label for="DeleteModal_reason" class="col-sm-3 control-label">理由</label>
            <div class="col-sm-9">
-             <input type="text" class="form-control" name="reason" id="DeleterModal_reason" placeholder="輸入刪除該管理員的理由">
+             <input type="text" class="form-control" name="reason" id="DeleteModal_reason" placeholder="輸入刪除該管理員的理由">
            </div>
           </div>
           <div class="form-group">
             <label class="col-sm-2 control-label"></label>
-            <div class="col-sm-10" id="DeleterModal_msg">
+            <div class="col-sm-10" id="DeleteModal_msg">
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <input type="hidden" name="id" id="DeleterModal_id" />
+          <input type="hidden" name="id" id="DeleteModal_id" />
           <button type="button" class="btn btn-default" data-dismiss="modal">關閉</button>
           <button type="submit" class="btn btn-danger">確定刪除</button>
         </div>

@@ -81,8 +81,29 @@ Route::filter('csrf', function()
 
 Route::filter('guest_only', function()
 {
-    if ( Session::has('user.login') )
-    {
+    if ( Session::has('user.login') ) {
         return Redirect::action('AppealController@index');
+    }
+});
+
+Route::filter('api_login_only', function()
+{
+    if ( Session::has('user.login') ) {
+        $response['status'] = '401 Unauthorized';
+        return Response::json($response);
+    }
+});
+
+Route::filter('api_manager_only', function() {
+    if ( Session::get('user.m_id') <= 0 ) {
+        $response['status'] = '403 Forbidden';
+        return Response::json($response);
+    }
+});
+
+Route::filter('api_sa_only', function() {
+    if (! ( Session::has('user.login') and (Session::get('user.is_sa') == true) )) {
+        $response['status'] = '403 Forbidden';
+        return Response::json($response);
     }
 });

@@ -20,9 +20,15 @@ class API_ReplyController extends \BaseController {
         $case_privacy        = $privacy[0];
         $complainant_privacy = $privacy[1];
 
-        if ( $case_privacy != 'public') {
-            $response['status'] = '401 Unauthorized';
-            return Response::json($response);
+        if ( $case_privacy != 'public' ) {
+            if ( !Session::has('user.login') ) {
+                $response['status'] = '401 Unauthorized';
+                return Response::json($response);
+            }
+            elseif ( !(Session::get('user.c_id') == $case->c_id or Session::get('user.m_id') > 0) ) {
+                $response['status'] = '403 Forbidden';
+                return Response::json($response);
+            }
         }
 
         $replies = Reply::where('case_id', '=', Input::get('case_id'))
@@ -71,7 +77,7 @@ class API_ReplyController extends \BaseController {
      *
      * @return Response
      */
-    public function create()
+    private function create()
     {
         //
     }
@@ -83,6 +89,8 @@ class API_ReplyController extends \BaseController {
      */
     public function store()
     {
+        $this->beforeFilter('api_is_login');
+
         $rules      = Config::get('validation.reply.store.rules');
         $messages   = Config::get('validation.reply.store.messages');
         $validator  = Validator::make(Input::all(), $rules, $messages);
@@ -98,14 +106,17 @@ class API_ReplyController extends \BaseController {
         else {
             $case = CaseModel::find(Input::get('case_id'));
 
-            if ( $case->c_id == Session::get('user.c_id') ) {
+            if ( $case->reply_status == 0 ) {
+                return Response::json(array('status' => '403 Forbidden'));
+            }
+            elseif ( $case->c_id == Session::get('user.c_id') ) {
                 $reply->r_type  = 'complainant';
             }
             elseif ( Session::get('user.m_id') > 0 ) {
                 $reply->r_type  = 'manager';
             }
             else {
-                return Response::json(array('status' => '401 Unauthorized'));
+                return Response::json(array('status' => '403 Forbidden'));
             }
 
             $reply->r_u_id      = Session::get('user.u_id');
@@ -125,7 +136,7 @@ class API_ReplyController extends \BaseController {
      * @param  int  $id
      * @return Response
      */
-    public function show($id)
+    private function show($id)
     {
         //
     }
@@ -136,7 +147,7 @@ class API_ReplyController extends \BaseController {
      * @param  int  $id
      * @return Response
      */
-    public function edit($id)
+    private function edit($id)
     {
         //
     }

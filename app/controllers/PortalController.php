@@ -50,13 +50,15 @@ class PortalController extends BaseController {
 
         $u_id = $ilt_user->u_id;
         $c_id = $complainant->c_id;
-        $m_id = ( $manager == null ) ? 0 : $manager->m_id;
+        $m_id = ( $manager == null || $manager->m_status == 2 ) ? 0 : $manager->m_id;
         $is_sa = in_array($username, Config::get('appeal.admin'));
 
         Session::put('user.login', true);
         Session::put('user.username', $username);
         Session::put('user.u_id', $u_id);
         Session::put('user.c_id', $c_id);
+
+        // 這兩個選項在做涉及管理權的動作時，都必須重讀
         Session::put('user.m_id', $m_id);
         Session::put('user.is_sa', $is_sa);
 

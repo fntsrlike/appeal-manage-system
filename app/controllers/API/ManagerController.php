@@ -40,10 +40,7 @@ class API_ManagerController extends \BaseController {
      */
     public function store()
     {
-        if (! ( Session::has('user.login') and (Session::get('user.is_sa') == true) )) {
-            $response['status'] = '403 Forbidden';
-            return Response::json($response);
-        }
+        $this->beforeFilter('api_sa_only');
 
         $rules      = Config::get('validation.manager.store.rules');
         $messages   = Config::get('validation.manager.store.messages');
@@ -90,10 +87,7 @@ class API_ManagerController extends \BaseController {
      */
     public function show($id)
     {
-        if (! ( Session::has('user.login') and (Session::get('user.is_sa') == true) )) {
-            $response['status'] = '403 Forbidden';
-            return Response::json($response);
-        }
+        $this->beforeFilter('api_sa_only');
 
         $manager = Manager::find($id);
 
@@ -123,10 +117,7 @@ class API_ManagerController extends \BaseController {
      */
     public function update($id)
     {
-        if (! ( Session::has('user.login') and (Session::get('user.is_sa') == true) )) {
-            $response['status'] = '403 Forbidden';
-            return Response::json($response);
-        }
+        $this->beforeFilter('api_sa_only');
 
         $rules      = Config::get('validation.manager.update.type.rules');
         $messages   = Config::get('validation.manager.update.type.messages');
@@ -200,10 +191,7 @@ class API_ManagerController extends \BaseController {
      */
     public function destroy($id)
     {
-        if (! ( Session::has('user.login') and (Session::get('user.is_sa') == true) )) {
-            $response['status'] = '403 Forbidden';
-            return Response::json($response);
-        }
+        $this->beforeFilter('api_sa_only');
 
         $rules      = Config::get('validation.manager.delete.rules');
         $messages   = Config::get('validation.manager.delete.messages');

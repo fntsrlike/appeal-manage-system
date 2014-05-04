@@ -7,7 +7,7 @@ class API_ComplainantController extends \BaseController {
 	 *
 	 * @return Response
 	 */
-	public function index()
+	private function index()
 	{
 		//
 	}
@@ -17,7 +17,7 @@ class API_ComplainantController extends \BaseController {
 	 *
 	 * @return Response
 	 */
-	public function create()
+	private function create()
 	{
 		//
 	}
@@ -27,7 +27,7 @@ class API_ComplainantController extends \BaseController {
 	 *
 	 * @return Response
 	 */
-	public function store()
+	private function store()
 	{
 		$rules      = Config::get('vallidation.complainant.store.rules');
 		$messages   = Config::get('vallidation.complainant.store.massages');
@@ -57,7 +57,7 @@ class API_ComplainantController extends \BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function show($id)
+	private function show($id)
 	{
 		//
 	}
@@ -68,7 +68,7 @@ class API_ComplainantController extends \BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function edit($id)
+	private function edit($id)
 	{
 		//
 	}
@@ -79,7 +79,7 @@ class API_ComplainantController extends \BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	private function update($id)
 	{
 		$rules      = Config::get('vallidation.complainant.update.rules');
 		$messages   = Config::get('vallidation.complainant.update.massages');
@@ -109,7 +109,7 @@ class API_ComplainantController extends \BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id)
+	private function destroy($id)
 	{
 		$complainant = Iltcomplainant::find($id);
 		$complainant->delete();
