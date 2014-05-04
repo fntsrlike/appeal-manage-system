@@ -63,7 +63,7 @@ class CreateAppealTable extends Migration {
             $table->softDeletes();
         });
 
-        Schema::create('appeal_users', function($table)
+        Schema::create('appeal_ilt_users', function($table)
         {
             $table->increments('u_id');
             $table->string('username')->unique();
