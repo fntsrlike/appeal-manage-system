@@ -2,6 +2,16 @@ var
 ns_user,
 ns_appeal;
 
+jQuery.nl2br = function( varTest ){
+  (varTest === null) && (varTest = '');
+  return varTest.replace(/(\r\n|\n\r|\r|\n)/g, "<br/>");
+};
+
+jQuery.br2nl = function( varTest ){
+  (varTest === null) && (varTest = '');
+  return varTest.replace(/<br[\w\s\/\-='"]*>/g, "\n");
+};
+
 $( function() {
   ns_user   = {
     'status': false,
@@ -111,9 +121,16 @@ $( function() {
 
     $( '#CreateManager form' ).submit( function( event ) {
       event.preventDefault();
-      ns_appeal.managers.update_status( $( this ) );
-      event.preventDefault();
       ns_appeal.managers.store( $( this ) );
+    });
+
+    $( '#AppealEndingModal form' ).submit( function( event ) {
+      event.preventDefault();
+      ns_appeal.cases.update( $( this ) );
+    });
+
+    $( 'a[href="#appeal-list"]' ).click( function() {
+      ns_appeal.cases.show_list( 0 );
     });
   };
 
@@ -174,7 +191,11 @@ $( function() {
   ns_appeal.cases.show = function( case_id ) {
     var
     url  = $( '#api_case_url' ).attr( 'action' ) + '/' + case_id,
-    grade = { '1' : '一年級', '2' : '二年級', '3' : '三年級', '4' : '四年級', '5' : '四年級Up' };
+    grade = { '1' : '一年級', '2' : '二年級', '3' : '三年級', '4' : '四年級', '5' : '四年級Up' },
+    case_status     = { 1 : '未處理', 2 : '處理中', 3 : '處理完畢' },
+    case_status_m   = { 1 : 'todo', 2 : 'doing', 3 : 'done' },
+    reply_status    = { 1 : '開放討論' , 0 : '不開放討論' },
+    reply_status_m  = { 1 : 'on' , 0 : 'off' };
 
     $.get(url, function(data){
 
@@ -199,24 +220,31 @@ $( function() {
       $( '#appeal-view-target' ).html( data.target );
       $( '#appeal-view-place'  ).html( data.place );
       $( '#appeal-view-date'   ).html( data.date );
-      $( '#appeal-view-status' ).html( data.status );
-      $( '#appeal-view-content'  ).html( data.content );
+      $( '#appeal-view-status' ).html( case_status[data.status] + '（' + reply_status[data.reply_status] + '）' );
+      $( '#appeal-view-content'  ).html( $.nl2br( data.content ) );
       $( '#appeal-view-pName'    ).html( data.name );
       $( '#appeal-view-pDepart'  ).html( data.depart + '（' + grade[data.grade] + '）' );
       $( '#appeal-view-pPhone' ).html( data.phone );
       $( '#appeal-view-pEmail' ).html( data.email );
-      $( '#appeal-view-report' ).html( data.report );
+      $( '#appeal-view-report' ).html( $.nl2br( data.report ) );
       $( '#appeal-view-id' ).attr( 'value', case_id );
+      $( '#AppealEndingModal_id' ).attr( 'value', case_id );
+
+      $( '#AppealEndingModal form').find( "select[name='case_status']" ).val( case_status_m[data.status] );
+      $( '#AppealEndingModal form').find( "select[name='reply_status']" ).val( reply_status_m[data.reply_status] );
+      $( '#AppealEndingModal form').find( "textarea[name='report']" ).html( $.br2nl( data.report ) );
 
       ns_appeal.replies.show( case_id );
 
-      if ( ns_user.name != data.name ) {
-        $( '#reply_form textarea' ).attr('disabled', 'disabled');
-        $( '#reply_form button' ).attr('disabled', 'disabled');
-      }
-      else {
+      console.log( ns_user.name == data.name , data.reply_status == 1 );
+      if ( ( ns_user.name == data.name || ns_user.m_id > 0 ) && data.reply_status == 1) {
+        $( '#reply_form textarea' ).attr('placeholder', '請輸入想要討論的留言');
         $( '#reply_form textarea' ).removeAttr('disabled');
         $( '#reply_form button' ).removeAttr('disabled');
+      } else {
+        $( '#reply_form textarea' ).attr('placeholder', '討論功能已關閉。');
+        $( '#reply_form textarea' ).attr('disabled', 'disabled');
+        $( '#reply_form button' ).attr('disabled', 'disabled');
       }
 
     });
@@ -292,6 +320,50 @@ $( function() {
     }
 
     return msg;
+  };
+
+  ns_appeal.cases.update = function( form ) {
+    var
+    id  = $( '#AppealEndingModal_id').attr( 'value' ),
+    url = $( '#api_case_url' ).attr( "action" ) + '/' + id + '?t=manage',
+    input = {
+      "case_status"   : form.find( "select[name='case_status']" ).val(),
+      "reply_status"  : form.find( "select[name='reply_status']" ).val(),
+      "report"        : form.find( "textarea[name='report']" ).val(),
+    };
+
+    $.ajax({
+      type: 'PUT',
+      url: url,
+      data: input,
+      success: function( data ) {
+        var msg, msgs, hash;
+
+        if ( data.status == '200 OK' ) {
+          alert( '您的案件編輯表單已成功送出！' );
+          form.each( function() {
+            this.reset();
+          });
+
+          $( '#AppealEndingModal' ).modal( 'hide' );
+          ns_appeal.cases.show( id );
+        } else {
+          msgs = '<ul>';
+
+          for ( var key in data.msg ) {
+            msgs += '<li><span class="text-danger">' + data.msg[key] + '</span></li>';
+          }
+
+          msgs += '</ul>';
+
+          $( '#AppealEndingModal_msg' ).html( msgs );
+        }
+      },
+      dataType: 'json'
+    })
+    .fail(function() {
+      alert( '連線失敗，請檢查網路狀況，或是聯絡管理員！' );
+    });
   };
 
   ns_appeal.replies.store = function( form ) {
@@ -384,7 +456,7 @@ $( function() {
       block += '<div class="row bottom-sp-15">';
       block += '<div class="block bg-white wd-min-500 ' + location + '">';
       block += '<h4>' + name + ' <small>' + date + '</small></h4>';
-      block += content;
+      block += $.nl2br( content );
       block += '</div></div>';
 
       blocks += block;

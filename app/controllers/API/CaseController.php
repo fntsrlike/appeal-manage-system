@@ -31,12 +31,12 @@ class API_CaseController extends \BaseController {
             $case_files['created_at'] = $case->created_at;
 
 
-            if ( Session::has('user.login') and Session::get('user.c_id') == $case->c_id ) {
+            if ( Session::has('user.login') and
+                    Session::get('user.c_id') == $case->c_id || Session::get('user.m_id') > 0 ) {
                 $case_privacy = 'public';
                 $case_files['is_owner'] = true;
             }
-
-            if( $case_privacy == 'secret') {
+            elseif( $case_privacy == 'secret' ) {
                 $case_files['date'] = '????-??-??';
                 $case_files['title'] = '<本案件標題已經被設為隱藏>';
                 $case_files['replies_count'] = '?';
@@ -130,6 +130,7 @@ class API_CaseController extends \BaseController {
         $response['status'] = $case->case_status;
         $response['content']= $case->case_content;
         $response['report'] = $case->case_report;
+        $response['reply_status'] = $case->reply_status;
 
         $response['name']   = $user->username;
         $response['depart'] = $complainant->c_department;
@@ -137,7 +138,8 @@ class API_CaseController extends \BaseController {
         $response['phone']  = $complainant->c_phone;
         $response['email']  = $complainant->c_email;
 
-        if ( Session::has('user.login') and Session::get('user.c_id') == $case->c_id ) {
+        if ( Session::has('user.login') and
+                Session::get('user.c_id') == $case->c_id || Session::get('user.m_id') > 0 ) {
             return Response::json($response);
         }
         else {
@@ -189,33 +191,72 @@ class API_CaseController extends \BaseController {
     {
         // $this->beforeFilter('csrf', array('on' => 'post'));
 
-        $rules      = Config::get('validation.case.update.rules');
-        $messages   = Config::get('validation.case.update.messages');
-        $validator  = Validator::make(Input::all(), $rules, $messages);
+        if ( Input::get('t') == 'update' and false ) {
+            $rules      = Config::get('validation.case.update.files.rules');
+            $messages   = Config::get('validation.case.update.files.messages');
+            $validator  = Validator::make(Input::all(), $rules, $messages);
 
-        if ($validator->fails()) {
-                        $messages = $validator->messages()->all();
-            $response['status'] = 'validation error';
-            $response['msg'] = $messages;
+            if ($validator->fails()) {
+                            $messages = $validator->messages()->all();
+                $response['status'] = 'validation error';
+                $response['msg'] = $messages;
 
-            return Response::json($response);
+                return Response::json($response);
+            }
+            else {
+                $privacy = Input::get('privacy_case') . ',' . Input::get('privacy_complainant');
+
+                $case = CaseModel::find($id);
+                $case->case_title  = Input::get('title');
+                $case->case_date   = Input::get('date');
+                $case->case_place  = Input::get('place');
+                $case->case_target = Input::get('target');
+                $case->case_content = Input::get('content');
+                $case->case_privacy = $privacy;
+                $case->save();
+
+                $response['status'] = 'success';
+
+                return Response::json($response);
+            }
+        }
+        elseif ( Input::get('t') == 'manage' ) {
+            $rules      = Config::get('validation.case.update.manage.rules');
+            $messages   = Config::get('validation.case.update.manage.messages');
+            $validator  = Validator::make(Input::all(), $rules, $messages);
+
+
+            if ( false === Session::has('user.login') or Session::get('user.m_id') == 0 ) {
+                $response['status'] = '403 Forbidden';
+                return Response::json($response);
+            }
+
+            if ($validator->fails()) {
+                $messages = $validator->messages()->all();
+                $response['status'] = '400 Bad Request';
+                $response['msg'] = $messages;
+
+                return Response::json($response);
+            }
+            else {
+                $case_status = array( 'todo' => 1, 'doing' => 2, 'done' => 3 );
+                $reply_status = array( 'on' => 1, 'off' => 0);
+
+                $case = CaseModel::find($id);
+                $case->case_status  = $case_status[Input::get('case_status')];
+                $case->reply_status = $reply_status[Input::get('reply_status')];
+                Input::has('report') and $case->case_report = Input::get('report');
+                $case->save();
+
+                $response['status'] = '200 OK';
+                return Response::json($response);
+            }
         }
         else {
-            $privacy = Input::get('privacy_case') . ',' . Input::get('privacy_complainant');
-
-            $case = CaseModel::find($id);
-            $case->case_title  = Input::get('title');
-            $case->case_date   = Input::get('date');
-            $case->case_place  = Input::get('place');
-            $case->case_target = Input::get('target');
-            $case->case_content = Input::get('content');
-            $case->case_privacy = $privacy;
-            $case->save();
-
-            $response['status'] = 'success';
-
+            $response['status'] = '400 Bad Request';
             return Response::json($response);
         }
+
     }
 
     /**

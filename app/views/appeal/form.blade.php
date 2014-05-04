@@ -117,8 +117,3 @@
     </form>
   </div>
 </div>
-<div id="appeal-success" class="row tab-pane fade">
-  <div class="div-center wd-600 alert bg-white">
-    <h3>成功了～～</h3>
-  </div>
-</div>
