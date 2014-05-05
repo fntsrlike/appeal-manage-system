@@ -46,7 +46,7 @@ class PortalController extends BaseController {
         }
 
         $complainant = Complainant::where('u_id', '=', $ilt_user->u_id)->first();
-        $manager = manager::where('u_id', '=', $ilt_user->u_id)->first();
+        $manager = Manager::where('u_id', '=', $ilt_user->u_id)->first();
 
         $u_id = $ilt_user->u_id;
         $c_id = $complainant->c_id;
