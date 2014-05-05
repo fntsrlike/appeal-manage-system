@@ -71,12 +71,13 @@ class PortalController extends BaseController {
             return Redirect::action('AppealController@index');
         }
 
+        $user = Session::get('user.files');
+
         if ( $user->login->student === false ) {
             $data['status'] = '請先去伊爾特系統認證學生身份';
             return View::make('portal.login_failed')->with($data);
         }
 
-        $user = Session::get('user.files');
         $data['username']   = $user->info->username;
         $data['number']     = $user->student->number;
         $data['department'] = $user->student->department;
