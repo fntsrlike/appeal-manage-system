@@ -296,7 +296,7 @@ $( function() {
   ns_appeal.cases.make_list_status = function( status, reply_no ) {
     var msg = '';
 
-    switch( status ) {
+    switch( parseInt( status, 10 ) ) {
       case 1:
         msg += '<td class="text-danger text-center">';
         msg += '未處理 <span class="label label-danger">' + reply_no + '</span></td>';
