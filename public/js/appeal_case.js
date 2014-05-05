@@ -162,7 +162,7 @@ $( function() {
         var msg, msgs, hash;
 
         if ( data.status == 'success' ) {
-          alert( 'ÄúµÄÉêÔVÒÑ½›³É¹¦ËÍ³ö£¡' );
+          alert( 'æ‚¨çš„ç”³è¨´å·²ç¶“æˆåŠŸé€å‡ºï¼' );
           $( '#appeal_form' ).get( 0 ).reset();
           $( '#input_content' ).val('');
 
@@ -183,32 +183,32 @@ $( function() {
       dataType: 'json'
     })
     .fail(function() {
-      alert( 'ßB¾€Ê§”¡£¬Õˆ™z²é¾WÂ· î›r£¬»òÊÇÂ“½j¹ÜÀí†T£¡' );
+      alert( 'é€£ç·šå¤±æ•—ï¼Œè«‹æª¢æŸ¥ç¶²è·¯ç‹€æ³ï¼Œæˆ–æ˜¯è¯çµ¡ç®¡ç†å“¡ï¼' );
     });
   };
 
   ns_appeal.cases.show = function( case_id ) {
     var
     url  = $( '#api_case_url' ).attr( 'action' ) + '/' + case_id,
-    grade = { '1' : 'Ò»Äê¼‰', '2' : '¶şÄê¼‰', '3' : 'ÈıÄê¼‰', '4' : 'ËÄÄê¼‰', '5' : 'ËÄÄê¼‰Up' },
-    case_status     = { 1 : 'Î´ÌÀí', 2 : 'ÌÀíÖĞ', 3 : 'ÌÀíÍê®…' },
+    grade = { '1' : 'ä¸€å¹´ç´š', '2' : 'äºŒå¹´ç´š', '3' : 'ä¸‰å¹´ç´š', '4' : 'å››å¹´ç´š', '5' : 'å››å¹´ç´šUp' },
+    case_status     = { 1 : 'æœªè™•ç†', 2 : 'è™•ç†ä¸­', 3 : 'è™•ç†å®Œç•¢' },
     case_status_m   = { 1 : 'todo', 2 : 'doing', 3 : 'done' },
-    reply_status    = { 1 : 'é_·ÅÓ‘Õ“' , 0 : '²»é_·ÅÓ‘Õ“' },
+    reply_status    = { 1 : 'é–‹æ”¾è¨è«–' , 0 : 'ä¸é–‹æ”¾è¨è«–' },
     reply_status_m  = { 1 : 'on' , 0 : 'off' };
 
     $.get(url, function(data){
 
       if ( data.length === 0 ) {
-        alert( 'ÄúËùÒªÇóµÄÉêÔV°¸¼şK²»´æÔÚ£¡' );
+        alert( 'æ‚¨æ‰€è¦æ±‚çš„ç”³è¨´æ¡ˆä»¶ä¸¦ä¸å­˜åœ¨ï¼' );
         return;
       }
 
       for ( var key in data) {
         if ( data[key] == '#private' ) {
           if ( key == 'title' ) {
-            data[key] = '<span class="text-center text-muted">±¾°¸¼ş˜Ëî}ÒÑ½›±»ÔO¶¨éë[²Ø</span>';
+            data[key] = '<span class="text-center text-muted">æœ¬æ¡ˆä»¶æ¨™é¡Œå·²ç¶“è¢«è¨­å®šç‚ºéš±è—</span>';
           } else if ( key == 'content' || key == 'report' ) {
-            data[key] = '<p class="text-center text-info">±¾°¸¼şƒÈÈİÒÑ½›±»ÔO¶¨éë[²Ø</p>';
+            data[key] = '<p class="text-center text-info">æœ¬æ¡ˆä»¶å…§å®¹å·²ç¶“è¢«è¨­å®šç‚ºéš±è—</p>';
           } else {
             data[key] = '<span class="text-muted">#private</span>';
           }
@@ -219,10 +219,10 @@ $( function() {
       $( '#appeal-view-target' ).html( data.target );
       $( '#appeal-view-place'  ).html( data.place );
       $( '#appeal-view-date'   ).html( data.date );
-      $( '#appeal-view-status' ).html( case_status[data.status] + '£¨' + reply_status[data.reply_status] + '£©' );
+      $( '#appeal-view-status' ).html( case_status[data.status] + 'ï¼ˆ' + reply_status[data.reply_status] + 'ï¼‰' );
       $( '#appeal-view-content'  ).html( $.nl2br( data.content ) );
       $( '#appeal-view-pName'    ).html( data.name );
-      $( '#appeal-view-pDepart'  ).html( data.depart + '£¨' + grade[data.grade] + '£©' );
+      $( '#appeal-view-pDepart'  ).html( data.depart + 'ï¼ˆ' + grade[data.grade] + 'ï¼‰' );
       $( '#appeal-view-pPhone' ).html( data.phone );
       $( '#appeal-view-pEmail' ).html( data.email );
       $( '#appeal-view-report' ).html( $.nl2br( data.report ) );
@@ -237,11 +237,11 @@ $( function() {
 
       console.log( ns_user.name == data.name , data.reply_status == 1 );
       if ( ( ns_user.name == data.name || ns_user.m_id > 0 ) && data.reply_status == 1) {
-        $( '#reply_form textarea' ).attr('placeholder', 'Õˆİ”ÈëÏëÒªÓ‘Õ“µÄÁôÑÔ');
+        $( '#reply_form textarea' ).attr('placeholder', 'è«‹è¼¸å…¥æƒ³è¦è¨è«–çš„ç•™è¨€');
         $( '#reply_form textarea' ).removeAttr('disabled');
         $( '#reply_form button' ).removeAttr('disabled');
       } else {
-        $( '#reply_form textarea' ).attr('placeholder', 'Ó‘Õ“¹¦ÄÜÒÑêPé]¡£');
+        $( '#reply_form textarea' ).attr('placeholder', 'è¨è«–åŠŸèƒ½å·²é—œé–‰ã€‚');
         $( '#reply_form textarea' ).attr('disabled', 'disabled');
         $( '#reply_form button' ).attr('disabled', 'disabled');
       }
@@ -299,22 +299,22 @@ $( function() {
     switch( status ) {
       case 1:
         msg += '<td class="text-danger text-center">';
-        msg += 'Î´ÌÀí <span class="label label-danger">' + reply_no + '</span></td>';
+        msg += 'æœªè™•ç† <span class="label label-danger">' + reply_no + '</span></td>';
         break;
 
       case 2:
         msg += '<td class="text-warning text-center">';
-        msg += 'ÌÀíÖĞ <span class="label label-warning">' + reply_no + '</span></td>';
+        msg += 'è™•ç†ä¸­ <span class="label label-warning">' + reply_no + '</span></td>';
         break;
 
       case 3:
         msg += '<td class="text-success text-center">';
-        msg += 'ÌÀíÍê®… <span class="label label-success">' + reply_no + '</span></td>';
+        msg += 'è™•ç†å®Œç•¢ <span class="label label-success">' + reply_no + '</span></td>';
         break;
 
       default:
         msg += '<td class="text-muted text-center">';
-        msg += '×xÈ¡åeÕ` <span class="label label-default">??</span></td>';
+        msg += 'è®€å–éŒ¯èª¤ <span class="label label-default">??</span></td>';
         break;
     }
 
@@ -339,7 +339,7 @@ $( function() {
         var msg, msgs, hash;
 
         if ( data.status == '200 OK' ) {
-          alert( 'ÄúµÄ°¸¼ş¾İ‹±í†ÎÒÑ³É¹¦ËÍ³ö£¡' );
+          alert( 'æ‚¨çš„æ¡ˆä»¶ç·¨è¼¯è¡¨å–®å·²æˆåŠŸé€å‡ºï¼' );
           form.each( function() {
             this.reset();
           });
@@ -361,7 +361,7 @@ $( function() {
       dataType: 'json'
     })
     .fail(function() {
-      alert( 'ßB¾€Ê§”¡£¬Õˆ™z²é¾WÂ· î›r£¬»òÊÇÂ“½j¹ÜÀí†T£¡' );
+      alert( 'é€£ç·šå¤±æ•—ï¼Œè«‹æª¢æŸ¥ç¶²è·¯ç‹€æ³ï¼Œæˆ–æ˜¯è¯çµ¡ç®¡ç†å“¡ï¼' );
     });
   };
 
@@ -381,7 +381,7 @@ $( function() {
         var msg, msgs, hash;
 
         if ( data.status == '402 OK' ) {
-          alert( 'ÄúµÄÁôÑÔÒÑ½›³É¹¦ËÍ³ö£¡' );
+          alert( 'æ‚¨çš„ç•™è¨€å·²ç¶“æˆåŠŸé€å‡ºï¼' );
           $( '#reply_form' ).each( function() {
             this.reset();
           });
@@ -398,13 +398,13 @@ $( function() {
           $( '#reply_form_error_msg' ).html( msgs );
         }
         else {
-          alert( 'ÄúŸo™àÔÚ±¾°¸¼şÁôÑÔ£¡' );
+          alert( 'æ‚¨ç„¡æ¬Šåœ¨æœ¬æ¡ˆä»¶ç•™è¨€ï¼' );
         }
       },
       dataType: 'json'
     })
     .fail(function() {
-      alert( 'ßB¾€Ê§”¡£¬Õˆ™z²é¾WÂ· î›r£¬»òÊÇÂ“½j¹ÜÀí†T£¡' );
+      alert( 'é€£ç·šå¤±æ•—ï¼Œè«‹æª¢æŸ¥ç¶²è·¯ç‹€æ³ï¼Œæˆ–æ˜¯è¯çµ¡ç®¡ç†å“¡ï¼' );
     });
   };
 
@@ -415,17 +415,17 @@ $( function() {
     $.get( url, function( data ){
 
       if ( ( data.length === 0 ) || ( data.status == '400 Bad Request' ) ) {
-        $('#appeal-view-dialog').html('<p class="text-danger text-center">Œ¦Ô’×xÈ¡åeÕ`</p>');
+        $('#appeal-view-dialog').html('<p class="text-danger text-center">å°è©±è®€å–éŒ¯èª¤</p>');
         return;
       }
 
       if ( data.status == '401 Unauthorized' || data.status == '403 Forbidden' ) {
-        $('#appeal-view-dialog').html('<p class="text-info text-center">±¾ÉêÔV°¸ÁôÑÔÒÑ½›ÔO³Éë[²Ø¡£</p>');
+        $('#appeal-view-dialog').html('<p class="text-info text-center">æœ¬ç”³è¨´æ¡ˆç•™è¨€å·²ç¶“è¨­æˆéš±è—ã€‚</p>');
         return;
       }
 
       if ( data.replies_count <= 0 ) {
-        $('#appeal-view-dialog').html('<p class="text-info text-center">Ä¿Ç°›]ÓĞŒ¦Ô’</p>');
+        $('#appeal-view-dialog').html('<p class="text-info text-center">ç›®å‰æ²’æœ‰å°è©±</p>');
         return;
       }
 
@@ -514,16 +514,16 @@ $( function() {
       if ( ns_user.is_sa === true ) {
         if ( type == 'being' ) {
           row += '<td>';
-          row += '<a data-toggle="modal" data-target="#EditModal" for="' + manager.m_id + '"><span class="text-primary">¾İ‹</span></a>';
+          row += '<a data-toggle="modal" data-target="#EditModal" for="' + manager.m_id + '"><span class="text-primary">ç·¨è¼¯</span></a>';
           row += ' | ';
-          row += '<a data-toggle="modal" data-target="#StopPermissionModal" for="' + manager.m_id + '"><span class="text-warning">ƒö™à</span></a>';
+          row += '<a data-toggle="modal" data-target="#StopPermissionModal" for="' + manager.m_id + '"><span class="text-warning">å‡æ¬Š</span></a>';
           row += '</td>';
         }
         else if ( type == 'was' ) {
           row += '<td>';
-          row += '<a data-toggle="modal" data-target="#DeleteModal" for="' + manager.m_id + '"><span class="text-danger">„h³ı</span></a>';
+          row += '<a data-toggle="modal" data-target="#DeleteModal" for="' + manager.m_id + '"><span class="text-danger">åˆªé™¤</span></a>';
           row += ' | ';
-          row += '<a data-toggle="modal" data-target="#RecoverPermissionModal" for="' + manager.m_id + '"><span class="text-warning">Í™à</span></a>';
+          row += '<a data-toggle="modal" data-target="#RecoverPermissionModal" for="' + manager.m_id + '"><span class="text-warning">å¾©æ¬Š</span></a>';
           row += '</td>';
         }
       }
@@ -580,9 +580,9 @@ $( function() {
     rows = '',
     row,
     type = {
-        'RECOVERY_MANAGER_PERM' : 'Í™à',
-        'STOP_MANAGER_PERM'     : 'ƒö™à',
-        'DELETE_MANAGER_PERM'   : '„h³ı'
+        'RECOVERY_MANAGER_PERM' : 'å¾©æ¬Š',
+        'STOP_MANAGER_PERM'     : 'å‡æ¬Š',
+        'DELETE_MANAGER_PERM'   : 'åˆªé™¤'
       },
     perm = ( ns_user.m_id > 0 ) || ( ns_user.is_sa === true ) ;
 
@@ -610,7 +610,7 @@ $( function() {
     $.get( url, function( data ) {
       var manager = data.manager;
 
-      $( '#EditModal_name' ).html( manager.name + '£¨' + manager.username + '£©' );
+      $( '#EditModal_name' ).html( manager.name + 'ï¼ˆ' + manager.username + 'ï¼‰' );
       $( '#EditModal_title' ).val( manager.title );
       $( '#EditModal_id' ).val( id );
       $( '#EditModal_msg' ).html('');
@@ -627,7 +627,7 @@ $( function() {
       var manager = data.manager;
 
       $( hash + '_reason' ).val( '' );
-      $( hash + '_name' ).html( manager.name + '£¨' + manager.username + '£©' );
+      $( hash + '_name' ).html( manager.name + 'ï¼ˆ' + manager.username + 'ï¼‰' );
       $( hash + '_id' ).val( id );
       $( hash + '_msg' ).html('');
     });
@@ -652,7 +652,7 @@ $( function() {
         msg, msgs;
 
         if ( data.status == '200 OK' ) {
-          alert('ÄúµÄĞŞ¸ÄÒÑ½›³É¹¦ËÍ³ö£¡');
+          alert('æ‚¨çš„ä¿®æ”¹å·²ç¶“æˆåŠŸé€å‡ºï¼');
           $( '#EditModal' ).modal( 'hide' );
         } else {
           msgs = '<ul>';
@@ -699,7 +699,7 @@ $( function() {
         msg, msgs;
 
         if ( data.status == '200 OK' ) {
-          alert('ÄúµÄĞŞ¸ÄÒÑ½›³É¹¦ËÍ³ö£¡');
+          alert('æ‚¨çš„ä¿®æ”¹å·²ç¶“æˆåŠŸé€å‡ºï¼');
           $( '#' + hash[status] ).modal( 'hide' );
         } else {
           msgs = '<ul>';
@@ -733,7 +733,7 @@ $( function() {
     $.get( url, function( data ) {
       var manager = data.manager;
 
-      $( '#DeleteModal_target' ).html( manager.name + '£¨' + manager.username + '£©' );
+      $( '#DeleteModal_target' ).html( manager.name + 'ï¼ˆ' + manager.username + 'ï¼‰' );
       $( '#DeleteModal_id' ).val( id );
       $( '#DeleteModal_msg' ).html('');
       $( '#DeleteModal_username' ).val('');
@@ -762,7 +762,7 @@ $( function() {
         msg, msgs;
 
         if ( data.status == '200 OK' ) {
-          alert('ÒÑ½›³É¹¦„h³ıÔ“¹ÜÀí†T£¡');
+          alert('å·²ç¶“æˆåŠŸåˆªé™¤è©²ç®¡ç†å“¡ï¼');
           $( '#DeleteModal' ).modal( 'hide' );
           form.each( function() {
             this.reset();
@@ -810,12 +810,12 @@ $( function() {
         msg, msgs;
 
         if ( data.status == '200 OK' ) {
-          alert('ÒÑ½›³É¹¦ĞÂÔöÔ“¹ÜÀí†T£¡');
+          alert('å·²ç¶“æˆåŠŸæ–°å¢è©²ç®¡ç†å“¡ï¼');
           form.each( function() {
             this.reset();
           });
         } else if ( data.status == '403 Forbidden' ) {
-          alert('Äú›]ÓĞ™àÏŞßMĞĞ´Ë²Ù×÷£¡');
+          alert('æ‚¨æ²’æœ‰æ¬Šé™é€²è¡Œæ­¤æ“ä½œï¼');
         } else {
           msgs = '<ul>';
 
