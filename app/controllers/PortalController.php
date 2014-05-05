@@ -118,7 +118,7 @@ class PortalController extends BaseController {
 
         $u_id = $ilt_user->u_id;
 
-        $complainant = new complainant;
+        $complainant = new Complainant;
         $complainant->u_id      = $u_id;
         $complainant->c_name    = $user->info->last_name . $user->info->first_name;
         $complainant->c_number  = $user->student->number;
