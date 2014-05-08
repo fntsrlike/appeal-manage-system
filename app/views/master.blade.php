@@ -39,10 +39,10 @@
 @section('footer_scripts')
     <script src="http://cdn.bootcss.com/jquery/1.10.2/jquery.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
-    <script src="http://res.nchusg.org/nav/load.js"></script>
     <script src="{{asset('js/appeal_case.js')}}"></script>
     <script src="{{asset('js/hash_tab.js')}}"></script>
     <script src="http://more.handlino.com/javascripts/moretext-1.2.js"></script>
 @show
+    {{ file_get_contents( 'http://fntsr.childish.tw/FntsrNav/' )}}
   </body>
 </html>
