@@ -1,3 +1,10 @@
+body {
+    background-position: center top;
+    background-repeat: repeat-x;
+    background-color: #EDF4F8;
+    background-image: url( "http://i.imgur.com/3ml6h5W.jpg" );
+}
+
 .bg-white {
     background-color: rgba(255,255,255, 0.5);
 }
