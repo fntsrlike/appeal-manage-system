@@ -42,7 +42,7 @@
     <script src="{{asset('js/appeal_case.js')}}"></script>
     <script src="{{asset('js/hash_tab.js')}}"></script>
     <script src="http://more.handlino.com/javascripts/moretext-1.2.js"></script>
+    <script src="http://nav.fntsr.tw/loading.js"></script>
 @show
-    {{ file_get_contents( 'http://fntsr.childish.tw/FntsrNav/' )}}
   </body>
 </html>
