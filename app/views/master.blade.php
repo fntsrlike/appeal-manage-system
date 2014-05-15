@@ -29,9 +29,9 @@
 
     <div class="row">
       <p class="text-center">
-        Created by {{Config::get('site.copyright.creator')}},
-        Maintaining by {{Config::get('site.copyright.maintainer')}} <br/>
-        Copyright © 2014 {{Config::get('site.copyright.copyright')}}.
+        Created by {{Config::get('appeal.site.copyright.creator')}},
+        Maintaining by {{Config::get('appeal.site.copyright.maintainer')}} <br/>
+        Copyright © 2014 {{Config::get('appeal.site.copyright.copyright')}}.
         All Rights Reserved <br/>
       </p>
     </div>

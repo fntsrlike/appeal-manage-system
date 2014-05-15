@@ -22,10 +22,10 @@ class PortalController extends BaseController {
 
     public function login(){
 
-        $key        = Config::get('ilt_provider.key');
-        $secret     = Config::get('ilt_provider.secret');
-        $host_url   = Config::get('ilt_provider.host_url');
-        $scope      = Config::get('ilt_provider.scope');
+        $key        = Config::get('appeal.ilt_provider.key');
+        $secret     = Config::get('appeal.ilt_provider.secret');
+        $host_url   = Config::get('appeal.ilt_provider.host_url');
+        $scope      = Config::get('appeal.ilt_provider.scope');
 
         $ilt_client = new IltOAuthClient($key, $secret, $host_url, $scope);
         $user_files = $ilt_client->run();

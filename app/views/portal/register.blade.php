@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>{{Config::get('site.name')}}</title>
+  <title>{{Config::get('appeal.site.name')}}</title>
 </head>
 <body>
   <div>
