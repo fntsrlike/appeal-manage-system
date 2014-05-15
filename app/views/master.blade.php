@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <title>APPEAL_SYSTEM</title>
+    <title>{{Config::get('appeal.site.title')}}</title>
 
 @section('head_css')
     <link rel="stylesheet" href="http://cdn.bootcss.com/twitter-bootstrap/3.0.3/css/bootstrap.min.css">
@@ -11,13 +11,13 @@
   </head>
   <body>
     <div class="container">
-      <h1 class="text-center">學權申訴系統</h1>
+      <h1 class="text-center">{{Config::get('appeal.site.name')}}</h1>
       <div class="div-center wd-600 bg-white-2 block bottom-sp-5">
         <ul class="nav nav-pills nav-justified" id="myTab">
-          <li class="active"><a href="#appeal-list" data-toggle="pill">申訴清單</a></li>
-          <li><a href="#appeal-view" data-toggle="pill">內文檢視</a></li>
-          <li><a href="#appeal-form" data-toggle="pill">我要申訴</a></li>
-          <li><a href="#appeal-manager" data-toggle="pill">學權團隊</a></li>
+          <li class="active"><a href="#appeal-list" data-toggle="pill">{{Config::get('appeal.site.tab.list')}}</a></li>
+          <li><a href="#appeal-view" data-toggle="pill">{{Config::get('appeal.site.tab.view')}}</a></li>
+          <li><a href="#appeal-form" data-toggle="pill">{{Config::get('appeal.site.tab.appeal')}}</a></li>
+          <li><a href="#appeal-manager" data-toggle="pill">{{Config::get('appeal.site.tab.manager')}}</a></li>
           <li class="login_hidden"><a href="{{action('PortalController@login')}}">使用者登入</a></li>
           <li class="login_show"><a href="{{action('PortalController@logout')}}">登出</a></li>
         </ul>
@@ -29,10 +29,11 @@
 
     <div class="row">
       <p class="text-center">
-        Created by {{Config::get('appeal.site.copyright.creator')}},
-        Maintaining by {{Config::get('appeal.site.copyright.maintainer')}} <br/>
-        Copyright © 2014 {{Config::get('appeal.site.copyright.copyright')}}.
-        All Rights Reserved <br/>
+        System maintaining by {{Config::get('appeal.site.maintainer')}}
+        <br/>
+        <a href="https://github.com/fntsrlike/appeal_system" target="_blank">Appeal Manage System</a>
+        create by <a href="http://about.me/fntsrlike" target="_blank">Fntsrlike</a>.
+        <br/>
       </p>
     </div>
 

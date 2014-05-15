@@ -44,11 +44,14 @@ return array(
     */
 
     'site' => array(
+        'title' => 'Appeal Manage System',
         'name' => '權益申訴系統',
-        'copyright' => array(
-            'creator'   => 'Fntsrlike',
-            'maintaner' => 'Fntsrlike',
-            'copyright' => 'Fntsrlike'
-        )
+        'tab' => array(
+            'list'      => '申訴清單',
+            'view'      => '內文檢視',
+            'appeal'    => '我要申訴',
+            'manager'   => '捍權團隊',
+        ),
+        'maintainer' => 'YOUR_ORGANIZARION_NAME',
     ),
 );
